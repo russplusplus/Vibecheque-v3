@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { RNCamera } from 'react-native-camera';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import storage from '@react-native-firebase/storage';
@@ -221,8 +222,8 @@ class CameraPage extends React.Component {
                         <View style={styles.iconContainer}>
                             <View style={styles.topIcons}>
                                 <TouchableOpacity onPress={this.toggleLogoutMode}>
-                                    <Ionicons
-                                        name='md-return-left'
+                                    <MaterialIcons
+                                        name='keyboard-return'
                                         style={styles.logoutIcon}
                                     />
                                 </TouchableOpacity>
@@ -237,7 +238,7 @@ class CameraPage extends React.Component {
                                 }
                                 <TouchableOpacity onPress={this.toggleSettingsMode}>
                                     <Ionicons
-                                        name='ios-settings'
+                                        name='settings-sharp'
                                         style={styles.favoriteIcon}
                                     />
                                 </TouchableOpacity>
@@ -254,12 +255,12 @@ class CameraPage extends React.Component {
                             :
                                 <View style={styles.bottomIcons}>
                                     <View style={{
-                                        alignItems: this.props.reduxState.userData.settings.leftHandedMode ? 'flex-start' : 'flex-end',
+                                        alignItems: this.props.reduxState.userData && this.props.reduxState.userData.settings.leftHandedMode ? 'flex-start' : 'flex-end',
                                         marginBottom: 2,
                                     }}>
                                         <TouchableOpacity onPress={this.switchCamera}>
                                             <Ionicons
-                                                name='md-reverse-camera'
+                                                name='camera-reverse-sharp'
                                                 style={styles.switchCameraIcon}
                                             />
                                         </TouchableOpacity>
