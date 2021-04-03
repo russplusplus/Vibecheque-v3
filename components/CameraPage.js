@@ -255,7 +255,7 @@ class CameraPage extends React.Component {
                             :
                                 <View style={styles.bottomIcons}>
                                     <View style={{
-                                        alignItems: this.props.reduxState.userData && this.props.reduxState.userData.settings.leftHandedMode ? 'flex-start' : 'flex-end',
+                                        alignItems: this.props.reduxState && this.props.reduxState.userData.settings.leftHandedMode ? 'flex-start' : 'flex-end',
                                         marginBottom: 2,
                                     }}>
                                         <TouchableOpacity onPress={this.switchCamera}>

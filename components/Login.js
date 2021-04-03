@@ -491,10 +491,11 @@ const styles = StyleSheet.create({
     },
     input: { 
         fontSize: 20, 
+        color: 'black',
         borderWidth: 0, 
         borderColor: 'black', 
         backgroundColor: 'white', 
-        padding: 12, 
+        //padding: 12, 
         width: '75%',
         height: 50,
         fontFamily: 'Rubik-Regular',
