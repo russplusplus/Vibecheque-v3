@@ -502,18 +502,8 @@ const styles = StyleSheet.create({
     },
     phoneInput: {
         width: '75%',
-        height: 70,
-        //fontSize: 44,
-        // margin:0,
-        // padding: 0
+        height: 50,
     },
-    // phoneInputText: {
-    //     height: 50,
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //     margin: 0,
-    //     padding: 50
-    // },
     regularButtonBlue: {
         width: '50%', 
         height: 40,
