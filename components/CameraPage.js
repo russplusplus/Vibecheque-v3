@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, StyleSheet, Button, Platform, TouchableOpacity, ImageBackground, TouchableNativeFeedbackBase, ActivityIndicator } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -22,74 +22,74 @@ FontAwesome.loadFont()
 Ionicons.loadFont()
 
 
-class CameraPage extends React.Component {
+const CameraPage = props => {
 
-    state = {
-        isLogoutMode: false,
-        isReviewMode: false,
-        isNoFavoriteMode: false,
-        isSettingsMode: false,
-        cameraType: RNCamera.Constants.Type.back,
-        capturedImageUri: '',
-        uid: '',
-        isSending: false,
-        isInboxLoading: false
-    }
+    const [isLogoutMode, setIsLogoutMode] = useState(false)
+    const [isReviewMode, setIsReviewMode] = useState(false)
+    const [isNoFavoriteMode, setIsNoFavoriteMode] = useState(false)
+    const [isSettingsMode, setIsSettingsMode] = useState(false)
+    const [cameraType, setCameraType] = useState(RNCamera.Constants.Type.back)
+    const [capturedImageUri, setCapturedImageUri] = useState('')
+    const [isSending, setIsSending] = useState(false)
+    const [isInboxLoading, setIsInboxLoading] = useState(false)
+    const cameraRef = useRef(null)
+
+    // state = {
+    //     isLogoutMode: false,
+    //     isReviewMode: false,
+    //     isNoFavoriteMode: false,
+    //     isSettingsMode: false,
+    //     cameraType: RNCamera.Constants.Type.back,
+    //     capturedImageUri: '',
+    //     uid: '',
+    //     isSending: false,
+    //     isInboxLoading: false
+    // }
 
     logout = () => {
         console.log('in logout function')
-        this.props.dispatch({
+        props.dispatch({
             type: 'LOGOUT',
-            history: this.props.history
+            history: props.history
         })
     }
 
     switchCamera = () => {
-        this.setState({
+        setCameraType(
             // these might just be 1 or 0, look into that with a real device
-            cameraType: this.state.cameraType === RNCamera.Constants.Type.back ? RNCamera.Constants.Type.front : RNCamera.Constants.Type.back
-        })
-        console.log(this.state.cameraType)
+            cameraType === RNCamera.Constants.Type.back ? RNCamera.Constants.Type.front : RNCamera.Constants.Type.back
+        )
+        console.log(cameraType)
     }
 
     toggleLogoutMode = () => {
         console.log('in toggleLogoutMode')
-        this.setState({
-            isLogoutMode: (this.state.isLogoutMode ? false : true)
-        })
+        setIsLogoutMode(isLogoutMode ? false : true)
     }
 
     toggleReviewMode = () => {
-        this.setState({
-            isReviewMode: (this.state.isReviewMode ? false : true)
-        })
+        setIsReviewMode(isReviewMode ? false : true)
     }
 
     toggleNoFavoriteMode = () => {
-        this.setState({
-            isNoFavoriteMode: (this.state.isNoFavoriteMode ? false : true)
-        })
+        setIsNoFavoriteMode(isNoFavoriteMode ? false : true)
     }
 
     takePicture = async () => {
-        if (this.camera) {
+        if (cameraRef) {
             const options = { quality: 1, base64: true };
-            const data = await this.camera.takePictureAsync(options);
+            const data = await cameraRef.current.takePictureAsync(options);   //current? this attribute is new, as described in tutorial
             console.log('uri:', data.uri);
-            this.setState({
-                capturedImageUri: data.uri
-            })
+            setCapturedImageUri(data.uri)
             console.log('after setState')
-            this.toggleReviewMode()
+            toggleReviewMode()
         }
     }
 
     sendImage = async () => {
-        console.log('in sendImage. didTheyFavorite:', this.props.reduxState.didTheyFavorite)
-        if (this.props.reduxState.userID) {
-            this.setState({
-                isSending: true
-            })
+        console.log('in sendImage. didTheyFavorite:', props.reduxState.didTheyFavorite)
+        if (props.reduxState.userID) {
+            setIsSending(true)
             
             // generate filename from current time in milliseconds
             let filename = new Date().getTime();
@@ -97,25 +97,23 @@ class CameraPage extends React.Component {
             const ref = storage().ref('images/' + String(filename));
             const metadata = {
                 customMetadata: {
-                    fromUid: this.props.reduxState.userID,
-                    toUid: this.props.reduxState.respondingTo,
-                    didTheyFavorite: this.props.reduxState.didTheyFavorite
+                    fromUid: props.reduxState.userID,
+                    toUid: props.reduxState.respondingTo,
+                    didTheyFavorite: props.reduxState.didTheyFavorite
                 }
             }
-            await ref.putFile(this.state.capturedImageUri, metadata);
+            await ref.putFile(capturedImageUri, metadata);
             
-            console.log('this.props.reduxState.respondingTo:', this.props.reduxState.respondingTo)
-            this.props.dispatch({  // image is sent, therefore not responding anymore 
+            console.log('props.reduxState.respondingTo:', props.reduxState.respondingTo)
+            props.dispatch({  // image is sent, therefore not responding anymore 
                 type: 'SET_NOT_RESPONDING'
             })
-            this.props.dispatch({  // if they favorite, this well be set back to false
+            props.dispatch({  // if they favorite, this well be set back to false
                 type: 'SET_DID_THEY_FAVORITE',
                 payload: 'false'
             })
-            this.toggleReviewMode()
-            this.setState({
-                isSending: false
-            })
+            toggleReviewMode()
+            setIsSending(false)
         } else {
             console.log('userID not found')
         }
@@ -123,38 +121,31 @@ class CameraPage extends React.Component {
 
     viewInbox = async () => {
         console.log('in viewInbox')
-        if (this.props.reduxState.userData.inbox) {
-            this.props.history.push('/ViewInbox')
+        if (props.reduxState.userData.inbox) {
+            props.history.push('/ViewInbox')
         } else {
             console.log('inbox is empty')
-            this.setState({
-                isInboxLoading: true
-            })
-            await this.props.dispatch({
+            setIsInboxLoading(true)
+            await props.dispatch({
                 type: 'GET_USER_DATA'
             })
-            this.setState({
-                isInboxLoading: false
-            })
+            setIsInboxLoading(false)
             console.log('already done')
         }
     }
 
     viewFavorite = () => {
         console.log('in viewFavorite')
-        if (this.props.reduxState.userData.favorite) {
-            this.props.history.push('/favorite')
+        if (props.reduxState.userData.favorite) {
+            props.history.push('/favorite')
         } else {
-            this.toggleNoFavoriteMode()
+            toggleNoFavoriteMode()
         }
     }
 
     toggleSettingsMode = async () => {
-        
-        console.log('in toggleSettingsMode. reduxState.newSettings:', this.props.reduxState.newSettings)
-        this.setState({
-            isSettingsMode: this.state.isSettingsMode ? false : true
-        })
+        console.log('in toggleSettingsMode. reduxState.newSettings:', props.reduxState.newSettings)
+        setIsSettingsMode(isSettingsMode ? false : true)
     }
 
     requestUserPermission = async () => {
@@ -165,139 +156,155 @@ class CameraPage extends React.Component {
         }
     }
 
-    componentDidMount = async () => {
-        //console.log('auth().currentUser:', auth().currentUser)
+    getUserData = async () => {
+        await props.dispatch({
+            type: 'GET_USER_DATA'
+        })
+    }
 
-        console.log('this.props.reduxState.userData:', this.props.reduxState.userData)
-
-        //get user ID
+    setUid = async () => {
         let uid = JSON.parse(await AsyncStorage.getItem('user')).uid
         console.log('uid:', uid)
-        this.props.dispatch({
+        props.dispatch({
             type: 'SET_USER_ID',
             payload: uid
         })
-
-        await this.props.dispatch({
-            type: 'GET_USER_DATA'
-        })
-
-        this.props.dispatch({  // updates user's divice registration token in database
-            type: 'GET_REGISTRATION_TOKEN'
-        })
-        
-        this.requestUserPermission()
     }
 
-    render() {
-        //console.log('leftHandedMode:', this.props.reduxState.userData.settings.leftHandedMode)
-        return (
-            <>
-                <View style={styles.container}>
-                    <Logout visible={this.state.isLogoutMode} toggleLogoutMode={this.toggleLogoutMode} logout={this.logout}/>
-                    <ReviewImage visible={this.state.isReviewMode} toggleReviewMode={this.toggleReviewMode} sendImage={this.sendImage} capturedImageUri={this.state.capturedImageUri} isSending={this.state.isSending}/>
-                    <NoFavorite visible={this.state.isNoFavoriteMode} toggleNoFavoriteMode={this.toggleNoFavoriteMode}/>
-                    <Settings visible={this.state.isSettingsMode} toggleSettingsMode={this.toggleSettingsMode}/>
-                    <RNCamera
-                        ref={ref => {
-                            this.camera = ref;
-                        }}
-                        style={styles.preview}
-                        type={this.state.cameraType}
-                        flashMode={RNCamera.Constants.FlashMode.off}
-                        androidCameraPermissionOptions={{
-                            title: 'Permission to use camera',
-                            message: 'We need your permission to use your camera',
-                            buttonPositive: 'Ok',
-                            buttonNegative: 'Cancel',
-                        }}
-                        androidRecordAudioPermissionOptions={{
-                            title: 'Permission to use audio recording',
-                            message: 'We need your permission to use your audio',
-                            buttonPositive: 'Ok',
-                            buttonNegative: 'Cancel',
-                        }}
-                        captureAudio={false}
-                    >
-                        <View style={styles.iconContainer}>
-                            <View style={styles.topIcons}>
-                                <TouchableOpacity onPress={this.toggleLogoutMode}>
-                                    <MaterialIcons
-                                        name='keyboard-return'
-                                        style={styles.logoutIcon}
-                                    />
-                                </TouchableOpacity>
-                                {this.props.reduxState.respondingTo ? 
-                                    <Text style={styles.respondingMessage}>
-                                        Responding
-                                    </Text>
-                                :
-                                    <Text style={styles.respondingMessage}>
+    useEffect(() => {
+        console.log('this.props.reduxState.userData:', props.reduxState.userData)
+        setUid()
+        getUserData()
+        props.dispatch({  // updates user's divice registration token in database
+            type: 'GET_REGISTRATION_TOKEN'
+        })
+    
+        requestUserPermission()
+    }, [])
 
-                                    </Text>
-                                }
-                                <TouchableOpacity onPress={this.toggleSettingsMode}>
-                                    <Ionicons
-                                        name='settings-sharp'
-                                        style={styles.favoriteIcon}
+    // componentDidMount = async () => {
+    //     console.log('this.props.reduxState.userData:', this.props.reduxState.userData)
+    //     let uid = JSON.parse(await AsyncStorage.getItem('user')).uid
+    //     console.log('uid:', uid)
+    //     this.props.dispatch({
+    //         type: 'SET_USER_ID',
+    //         payload: uid
+    //     })
+    //     await this.props.dispatch({
+    //         type: 'GET_USER_DATA'
+    //     })
+    //     this.props.dispatch({  // updates user's divice registration token in database
+    //         type: 'GET_REGISTRATION_TOKEN'
+    //     })
+    
+    //     this.requestUserPermission()
+    // }
+
+    return (
+        <>
+            <View style={styles.container}>
+                <Logout visible={isLogoutMode} toggleLogoutMode={toggleLogoutMode} logout={logout}/>
+                <ReviewImage visible={isReviewMode} toggleReviewMode={toggleReviewMode} sendImage={sendImage} capturedImageUri={capturedImageUri} isSending={isSending}/>
+                <NoFavorite visible={isNoFavoriteMode} toggleNoFavoriteMode={toggleNoFavoriteMode}/>
+                <Settings visible={isSettingsMode} toggleSettingsMode={toggleSettingsMode}/>
+                <RNCamera
+                    ref={cameraRef}
+                    style={styles.preview}
+                    type={cameraType}
+                    flashMode={RNCamera.Constants.FlashMode.off}
+                    androidCameraPermissionOptions={{
+                        title: 'Permission to use camera',
+                        message: 'We need your permission to use your camera',
+                        buttonPositive: 'Ok',
+                        buttonNegative: 'Cancel',
+                    }}
+                    androidRecordAudioPermissionOptions={{
+                        title: 'Permission to use audio recording',
+                        message: 'We need your permission to use your audio',
+                        buttonPositive: 'Ok',
+                        buttonNegative: 'Cancel',
+                    }}
+                    captureAudio={false}
+                >
+                    <View style={styles.iconContainer}>
+                        <View style={styles.topIcons}>
+                            <TouchableOpacity onPress={toggleLogoutMode}>
+                                <MaterialIcons
+                                    name='keyboard-return'
+                                    style={styles.logoutIcon}
+                                />
+                            </TouchableOpacity>
+                            {props.reduxState.respondingTo ? 
+                                <Text style={styles.respondingMessage}>
+                                    Responding
+                                </Text>
+                            :
+                                <Text style={styles.respondingMessage}>
+
+                                </Text>
+                            }
+                            <TouchableOpacity onPress={toggleSettingsMode}>
+                                <Ionicons
+                                    name='settings-sharp'
+                                    style={styles.favoriteIcon}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        {props.reduxState.respondingTo ?
+                            <View style={styles.respondingBottomIcons}>
+                                <TouchableOpacity onPress={takePicture}>
+                                    <FontAwesome
+                                        name='circle-thin'
+                                        style={styles.captureIcon}
                                     />
                                 </TouchableOpacity>
                             </View>
-                            {this.props.reduxState.respondingTo ?
-                                <View style={styles.respondingBottomIcons}>
-                                    <TouchableOpacity onPress={this.takePicture.bind(this)}>
+                        :
+                            <View style={styles.bottomIcons}>
+                                <View style={{
+                                    alignItems: props.reduxState.userData && props.reduxState.userData.settings.leftHandedMode ? 'flex-start' : 'flex-end',
+                                    marginBottom: 2,
+                                }}>
+                                    <TouchableOpacity onPress={switchCamera}>
+                                        <Ionicons
+                                            name='camera-reverse-sharp'
+                                            style={styles.switchCameraIcon}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.bottomBottomIcons}>
+                                    <TouchableOpacity onPress={viewInbox} style={styles.viewInbox}>
+                                        {isInboxLoading ? 
+                                            <ActivityIndicator
+                                                style={styles.wheel}
+                                                color='black'
+                                            /> 
+                                        :
+                                            <Text style={styles.inboxText}>{props.reduxState.userData.inbox ? Object.keys(props.reduxState.userData.inbox).length : 0}</Text>
+                                        }
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={takePicture}>
                                         <FontAwesome
                                             name='circle-thin'
                                             style={styles.captureIcon}
                                         />
                                     </TouchableOpacity>
+                                    <TouchableOpacity onPress={viewFavorite} style={styles.viewFavorite}>
+                                        <Ionicons
+                                            name='md-star'
+                                            style={styles.favoriteIcon}
+                                        />
+                                    </TouchableOpacity>
                                 </View>
-                            :
-                                <View style={styles.bottomIcons}>
-                                    <View style={{
-                                        alignItems: this.props.reduxState && this.props.reduxState.userData.settings.leftHandedMode ? 'flex-start' : 'flex-end',
-                                        marginBottom: 2,
-                                    }}>
-                                        <TouchableOpacity onPress={this.switchCamera}>
-                                            <Ionicons
-                                                name='camera-reverse-sharp'
-                                                style={styles.switchCameraIcon}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={styles.bottomBottomIcons}>
-                                        <TouchableOpacity onPress={this.viewInbox} style={styles.viewInbox}>
-                                            {this.state.isInboxLoading ? 
-                                                <ActivityIndicator
-                                                    style={styles.wheel}
-                                                    color='black'
-                                                /> 
-                                            :
-                                                <Text style={styles.inboxText}>{this.props.reduxState.userData.inbox ? Object.keys(this.props.reduxState.userData.inbox).length : 0}</Text>
-                                            }
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={this.takePicture.bind(this)}>
-                                            <FontAwesome
-                                                name='circle-thin'
-                                                style={styles.captureIcon}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={this.viewFavorite} style={styles.viewFavorite}>
-                                            <Ionicons
-                                                name='md-star'
-                                                style={styles.favoriteIcon}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            }
-                        </View>
-                    </RNCamera>
-                </View>
-            </>
-        )
-    }
+                            </View>
+                        }
+                    </View>
+                </RNCamera>
+            </View>
+        </>
+    )
 }
+
 
 const styles = StyleSheet.create({
     container: {

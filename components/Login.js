@@ -160,9 +160,16 @@ const Login = props => {
         console.log('in checkIfLoggedIn function')
         try {
             const user = JSON.parse(await AsyncStorage.getItem("user"))
-            console.log('in checkIfLoggedIn. user.uid:', user.uid)
+            const uid = JSON.parse(await AsyncStorage.getItem("user")).user.uid
+            console.log('in checkIfLoggedIn. user.user.uid:', uid)
             if (user) {
-                updateRegistrationToken(user)
+                console.log('user is true. Logging in')
+                console.log('uid:', uid)
+                await props.dispatch({
+                    type: 'SET_USER_ID',
+                    payload: uid
+                })
+                updateRegistrationToken(uid)
                 props.history.push('/camera')
             }
         } catch (error) {
@@ -171,10 +178,10 @@ const Login = props => {
         }
     }
 
-    updateRegistrationToken = async (user) => {
+    updateRegistrationToken = async (uid) => {
         let registrationToken = await messaging().getToken()
         await database()
-            .ref(`/users/${user.uid}`)
+            .ref(`/users/${uid}`)
             .update({
                 registrationToken: registrationToken
             })
