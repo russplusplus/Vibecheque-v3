@@ -14,13 +14,9 @@ import colors from '../assets/colors';
 const Login = props => {
 
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [isRegisterLoading, setIsRegisterLoading] = useState(false);
     const [isLoginLoading, setIsLoginLoading] = useState(false);
     const [confirm, setConfirm] = useState(null);
     const [code, setCode] = useState('');
-    const [loginMode, setLoginMode] = useState('phone');
-    const [emailInput, setEmailInput] = useState('');
-    const [passwordInput, setPasswordInput] = useState('');
 
     const phoneInput = useRef(null);
 
@@ -59,7 +55,6 @@ const Login = props => {
             return
         }
         setIsLoginLoading(true)
-
         try {   
             const confirmation = await auth().signInWithPhoneNumber(fullPhoneNumber);
             setConfirm(confirmation);
@@ -68,26 +63,30 @@ const Login = props => {
             console.log('Error. Text not sent.', error)
             setMessage('Invalid phone number.')
         }
-        
         setIsLoginLoading(false);
     }
 
     confirmCode = async () => {
         setIsLoginLoading(true)
         try {
-            let user = await confirm.confirm(code);
+            const user = await confirm.confirm(code);
+            const uid = user.user.uid
             console.log('code is valid! user:', user)
-            let isBanned = await checkIfBanned(user.uid)
+            let isBanned = await checkIfBanned(uid)
             console.log('isBanned:', isBanned)
             console.log('typeof isBanned:', typeof(isBanned))
             if (!isBanned) {
-                updateRegistrationToken(user)
-                await AsyncStorage.setItem("user", JSON.stringify(user))
+                updateRegistrationToken(uid)
                 setMessage('')
                 await props.dispatch({
-                    type: 'GET_USER_DATA',
-                    payload: user.uid
+                    type: 'SET_USER_ID',
+                    payload: uid
                 })
+                await props.dispatch({
+                    type: 'GET_USER_DATA',
+                    payload: uid
+                })
+                await AsyncStorage.setItem("user", JSON.stringify(user))
                 props.history.push('/camera')
             } else {
                 setIsLoginLoading(false)
@@ -99,61 +98,6 @@ const Login = props => {
             console.log('error:', error)
             setMessage('Invalid code.')
         }
-    }
-
-    emailLogin = async () => {
-        setIsLoginLoading(true)
-        console.log('in emailLogin function');
-        if (!emailInput && !passwordInput) {
-            setIsLoginLoading(false)
-            setMessage('Please enter an email address and a password to proceed.')
-            return
-        }
-        if (!emailInput || !passwordInput) {
-            setIsLoginLoading(false)
-            setMessage('Please enter an email address AND a password to proceed.')
-            return
-        }
-
-        // Firebase login
-        props.dispatch({
-            type: 'LOGIN',
-            history: props.history,
-            payload: {
-                email: emailInput,
-                password: passwordInput
-            }
-        })
-        
-        setIsLoginLoading(false)
-    }
-
-    register = async () => {
-        console.log('in register function');
-        if (!emailInput) {
-            setMessage("We're gonna need an email address.")
-            return
-        }
-        if (!passwordInput) {
-            setMessage("You should probably set a password too.")
-            return
-        }
-        if (passwordInput.length < 6) {
-            setMessage("Password must be at least six characters.")
-            return
-        }
-        setIsRegisterLoading(true);
-
-        // Firebase register
-        props.dispatch({
-            type: 'SIGN_UP',
-            history: props.history,
-            payload: {
-                email: emailInput,
-                password: passwordInput
-            }
-        })
-        setIsRegisterLoading(false);
     }
 
     checkIfLoggedIn = async () => {
@@ -189,15 +133,14 @@ const Login = props => {
 
     back = () => {
         setMessage('')
-        setIsRegisterLoading(false)
         setIsLoginLoading(false)
         setConfirm(null)
-        setLoginMode('')
     }
 
-
+    // this needs work
     async function onAuthStateChanged(user) {
         console.log('in onAuthStateChanged. user:', user)
+        const uid = user.user.uid
 
         if (user) {
 
@@ -205,7 +148,7 @@ const Login = props => {
 
         try {
             console.log('code is valid! user:', user)
-            let isBanned = await checkIfBanned(user.uid)
+            let isBanned = await checkIfBanned(uid)
             console.log('isBanned:', isBanned)
             console.log('typeof isBanned:', typeof(isBanned))
             if (!isBanned) {
@@ -230,7 +173,7 @@ const Login = props => {
 
         checkIfLoggedIn()
         console.log('user:', user);
-      }
+    }
     
     //   useEffect(() => {
     //     const subscriber = auth().onAuthStateChanged((user) => {
@@ -248,214 +191,90 @@ const Login = props => {
 
     useEffect(() =>  {
         checkIfLoggedIn()
-        console.log('loginMode:', loginMode)
     }, [])
 
-    if (loginMode === '') {
-        return (
-            <>
-                <View style={styles.container}>
-                    <Text 
-                        style={styles.message}>
-                        {props.reduxState.loginMessage}
-                    </Text>
-                    <Image source={require('../assets/Vibecheque_logo.png')} style={styles.logo}/>
-                    <View style={styles.menuContainer}>
-                        <TouchableOpacity
-                            onPress={() => setLoginMode('phoneNumber')}
-                            style={styles.wideButtonBlue}>
-                            <Text
-                                style={{
-                                    fontSize: 20,
-                                    fontFamily: 'Rubik-Regular',
-                                    // color: colors.cream
-                                }}>
-                                Continue with phone number
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => setLoginMode('email')}
-                            style={styles.wideButtonGreen}>
-                            <Text
-                                style={{
-                                    fontSize: 20,
-                                    fontFamily: 'Rubik-Regular'
-                                }}>
-                                Continue with email
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </>
-        )
-    } else if (loginMode === 'email') {
-        return (
-            <>
-                <View style={styles.container}>
-                    <Text 
-                        style={styles.message}>
-                        {props.reduxState.loginMessage}
-                    </Text>
-                    <Image source={require('../assets/Vibecheque_logo.png')} style={styles.logo}/>
-                    
-                    <View style={styles.menuContainer}>
-                    
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => setEmailInput(text)}
-                            placeholder='email'
-                            keyboardType='email-address'
-                            autoCapitalize='none'
-                        />
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => setPasswordInput(text)}
-                            placeholder="password"
-                            secureTextEntry={true}
-                        />
-                        <TouchableOpacity
-                            onPress={emailLogin}
-                            style={styles.regularButtonBlue}>
-                            {isLoginLoading ?
-                                <ActivityIndicator
-                                    style={styles.wheel}
-                                    color='black'
-                                /> 
-                            :
-                                <Text
-                                    style={{
-                                        fontSize: 20,
-                                        fontFamily: 'Rubik-Regular'
-                                    }}>
-                                    Login
-                                </Text>
-                            }
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={register}
-                            style={styles.regularButtonGreen}>
-                            {isRegisterLoading ? 
-                                <ActivityIndicator
-                                    style={styles.wheel}
-                                    color='black'
-                                /> 
-                            :
-                                <Text
-                                    style={{
-                                        fontSize: 20,
-                                        fontFamily: 'Rubik-Regular'
-                                    }}>
-                                    Register
-                                </Text>
-                            }  
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => back()}
-                            style={styles.backButton}>
-                            <Text
-                                style={{
-                                    fontSize: 20,
-                                    fontFamily: 'Rubik-Regular'
-                                }}>
-                                Back
-                            </Text>
-                        </TouchableOpacity>
-                        
-                    </View>
-
-                </View>
-            </>
-        )
-    } else {
-        return (
-            <>
-                <View style={styles.container}>
-                    <Text 
-                        style={styles.message}>
-                        {props.reduxState.loginMessage}
-                    </Text>
-                    <Image source={require('../assets/Vibecheque_logo.png')} style={styles.logo}/>
-
-                    <View style={styles.menuContainer}>    
-
-                    {!confirm ?
-                    <>    
-                        <PhoneInput
-                            ref={phoneInput}
-                            onChangeText={text => setPhoneNumber(text)}
-                            defaultCode={"US"}
-                            placeholder={"1-800-your-mom"}
-                            containerStyle={styles.phoneInput}
-                            layout='second'
-                            autoFocus
-                        >
-                        </PhoneInput>
-                        <TouchableOpacity
-                            onPress={sendCode}
-                            style={styles.regularButtonBlue}>
-                            {isLoginLoading ? 
-                                <ActivityIndicator
-                                    style={styles.wheel}
-                                    color='black'
-                                /> 
-                            :
-                                <Text
-                                    style={{
-                                        fontSize: 20,
-                                        fontFamily: 'Rubik-Regular'
-                                    }}>
-                                    Send Code
-                                </Text>
-                            }
-                        </TouchableOpacity>
-                    </>
+    return (
+        <View style={styles.container}>
+            <Text 
+                style={styles.message}>
+                {props.reduxState.loginMessage}
+            </Text>
+            <Image source={require('../assets/Vibecheque_logo.png')} style={styles.logo}/>
+            <View style={styles.menuContainer}>    
+            {!confirm ?
+            <>    
+                <PhoneInput
+                    ref={phoneInput}
+                    onChangeText={text => setPhoneNumber(text)}
+                    defaultCode={"US"}
+                    placeholder={"1-800-your-mom"}
+                    containerStyle={styles.phoneInput}
+                    layout='second'
+                    autoFocus
+                >
+                </PhoneInput>
+                <TouchableOpacity
+                    onPress={sendCode}
+                    style={styles.regularButtonBlue}>
+                    {isLoginLoading ? 
+                        <ActivityIndicator
+                            style={styles.wheel}
+                            color='black'
+                        /> 
                     :
-                    <>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={text => setCode(text)}
-                            placeholder='code'
-                            keyboardType='number-pad'
-                            autoCapitalize='none'
-                        />
-                        <TouchableOpacity
-                            onPress={confirmCode}
-                            style={styles.regularButtonBlue}>
-                            {isLoginLoading ?
-                                <ActivityIndicator
-                                    style={styles.wheel}
-                                    color='black'
-                                /> 
-                            :
-                                <Text
-                                    style={{
-                                        fontSize: 20,
-                                        fontFamily: 'Rubik-Regular'
-                                    }}>
-                                    Login
-                                </Text>
-                            }
-                        </TouchableOpacity>
-                    </>
-                    }
-                    <TouchableOpacity
-                        onPress={() => back()}
-                        style={styles.backButton}>
                         <Text
                             style={{
                                 fontSize: 20,
                                 fontFamily: 'Rubik-Regular'
                             }}>
-                            Back
+                            Send Code
                         </Text>
-                    </TouchableOpacity>
-
-                    </View>
-
-                </View>
+                    }
+                </TouchableOpacity>
             </>
-        )
-    }
+            :
+            <>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={text => setCode(text)}
+                    placeholder='code'
+                    keyboardType='number-pad'
+                    autoCapitalize='none'
+                />
+                <TouchableOpacity
+                    onPress={confirmCode}
+                    style={styles.regularButtonBlue}>
+                    {isLoginLoading ?
+                        <ActivityIndicator
+                            style={styles.wheel}
+                            color='black'
+                        /> 
+                    :
+                        <Text
+                            style={{
+                                fontSize: 20,
+                                fontFamily: 'Rubik-Regular'
+                            }}>
+                            Login
+                        </Text>
+                    }
+                </TouchableOpacity>
+            </>
+            }
+            <TouchableOpacity
+                onPress={() => back()}
+                style={styles.backButton}>
+                <Text
+                    style={{
+                        fontSize: 20,
+                        fontFamily: 'Rubik-Regular'
+                    }}>
+                    Back
+                </Text>
+            </TouchableOpacity>
+            </View>
+        </View>
+    )
 }
 
 const mapReduxStateToProps = reduxState => ({

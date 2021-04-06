@@ -163,7 +163,8 @@ const CameraPage = props => {
     }
 
     setUid = async () => {
-        let uid = JSON.parse(await AsyncStorage.getItem('user')).uid
+        //let uid = JSON.parse(await AsyncStorage.getItem('user')).uid
+        let uid = props.reduxState.userID
         console.log('uid:', uid)
         props.dispatch({
             type: 'SET_USER_ID',
