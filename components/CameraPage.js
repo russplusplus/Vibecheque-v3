@@ -265,6 +265,8 @@ const CameraPage = props => {
                                 <View style={{
                                     alignItems: props.reduxState.userData && props.reduxState.userData.settings.leftHandedMode ? 'flex-start' : 'flex-end',
                                     marginBottom: 2,
+                                    paddingRight: 3,
+                                    paddingLeft: 3
                                 }}>
                                     <TouchableOpacity onPress={switchCamera}>
                                         <Ionicons
@@ -338,13 +340,6 @@ const styles = StyleSheet.create({
         // borderWidth: 2,
         // borderColor: 'blue'
     },
-    switchCameraContainer: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        alignItems: 'flex-start',
-        marginBottom: 2
-        //paddingRight: 3
-    },
     bottomBottomIcons: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -365,7 +360,9 @@ const styles = StyleSheet.create({
         width: '14%',
         aspectRatio: 1,
         borderRadius: 10,
-        paddingBottom: Platform.OS === 'ios' ? 2 : 1
+        //paddingBottom: Platform.OS === 'ios' ? 2 : 1
+        marginBottom: 6,
+        marginLeft: 6
     },
     viewFavorite: {
         justifyContent: Platform.OS === 'ios' ? 'flex-end' : 'flex-end',
@@ -376,7 +373,9 @@ const styles = StyleSheet.create({
         width: '14%',
         aspectRatio: 1,
         borderRadius: 10,
-        paddingBottom: Platform.OS === 'ios' ? 1 : 4
+        paddingBottom: Platform.OS === 'ios' ? 1 : 4,
+        marginBottom: 6,
+        marginRight: 6
     },
     logoutIcon: {
         color: 'white', 
@@ -398,7 +397,10 @@ const styles = StyleSheet.create({
     },
     captureIcon: {
         color: 'white', 
-        fontSize: 82
+        fontSize: 82,
+        // borderWidth: 2,
+        // borderColor: 'pink',
+        textAlign: 'center'
     },
     favoriteIcon: {
         color: 'white',

@@ -123,15 +123,18 @@ class Settings extends React.Component {
                             <Text style={styles.setting}>Max distance:</Text>
                             <Text style={styles.setting}>{this.props.reduxState.newSettings.distance} miles</Text>
                         </View>
-                        <Slider
-                            value={this.props.reduxState.newSettings.distance}
-                            onValueChange={(val) => this.changeDistance(Math.round(val))}
-                            style={{width: 300, height: 60}}
-                            minimumValue={1}
-                            maximumValue={100}
-                            minimumTrackTintColor={colors.green}
-                            maximumTrackTintColor="grey"
-                        />
+                        <View style={styles.sliderContainer}>
+                            <Slider
+                                value={this.props.reduxState.newSettings.distance}
+                                onValueChange={(val) => this.changeDistance(Math.round(val))}
+                                style={{width: 300, height: 60}}
+                                minimumValue={1}
+                                maximumValue={100}
+                                minimumTrackTintColor={colors.green}
+                                maximumTrackTintColor="grey"
+                                //thumbTintColor={colors.green}
+                            />
+                        </View>
                     </View>
                     :
                     <View style={styles.settingDistanceRow}>
@@ -171,19 +174,18 @@ const styles = StyleSheet.create({
     container: {
         flex:1, 
         alignItems: 'center', 
-        justifyContent: 'flex-end', 
+        justifyContent: 'space-around', 
         marginLeft: '5%', 
         marginRight: '5%', 
-        marginTop: '40%', 
-        marginBottom: '40%', 
+        marginTop: '30%', 
+        marginBottom: '30%', 
         backgroundColor: colors.cream, 
-        borderWidth: 0, 
-        borderColor: 'black', 
         borderRadius: 10, 
         paddingLeft: '5%', 
         paddingRight: '5%'
     },
     title: {
+        marginTop: '20%',
         fontSize: 36, 
         textAlign: 'center', 
         fontFamily: 'Rubik-Regular',
@@ -202,9 +204,14 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 80,
         flexDirection: 'column',
-        //alignItems: 'flex-start',
-        paddingLeft: 0,
+        //alignItems: 'stretch',
+        //paddingLeft: 0,
         //paddingBottom: 16,
+    },
+    sliderContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     setting: {
         display: 'flex',
@@ -225,7 +232,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: colors.blue,
         justifyContent: 'center',
-        marginTop: '20%',
+        marginTop: 30,
         alignItems: 'center'
     },
     yesButtonText: {
@@ -240,7 +247,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: colors.red,
         justifyContent: 'center',
-        marginTop: 10,
+        marginTop: 20,
+        marginBottom: '20%',
         alignItems: 'center'
     },
     cancelButtonText: {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Button, ImageBackground, TouchableOpacity, TouchableWithoutFeedback, Platform } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import database from '@react-native-firebase/database';
@@ -62,8 +63,8 @@ class Favorite extends React.Component {
                                 <TouchableOpacity
                                     style={styles.return}
                                     onPress={this.returnToCameraPage}>
-                                    <Ionicons
-                                        name='md-return-left'
+                                    <MaterialIcons
+                                        name='keyboard-return'
                                         style={styles.returnIcon}
                                     />
                                 </TouchableOpacity>
@@ -117,7 +118,9 @@ const styles = StyleSheet.create({
         width: '14%',
         aspectRatio: 1,
         borderRadius: 10,
-        paddingBottom: Platform.OS === 'ios' ? 2 : 4
+        paddingBottom: Platform.OS === 'ios' ? 2 : 4,
+        marginBottom: 6,
+        marginLeft: 6
     },
     deleteFavorite: {
         justifyContent: Platform.OS === 'ios' ? 'flex-end' : 'flex-end',
@@ -128,7 +131,9 @@ const styles = StyleSheet.create({
         width: '14%',
         aspectRatio: 1,
         borderRadius: 10,
-        paddingBottom: Platform.OS === 'ios' ? 1 : 6
+        paddingBottom: Platform.OS === 'ios' ? 1 : 6,
+        marginBottom: 6,
+        marginRight: 6
     },
     returnIcon: {
         color: 'black',
