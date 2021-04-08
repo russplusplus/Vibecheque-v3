@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Button, ImageBackground, TouchableOpacity, TouchableWithoutFeedback, Platform } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { View, StyleSheet, ImageBackground, TouchableOpacity, Platform } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
-import database from '@react-native-firebase/database';
 
 import DeleteFavorite from './DeleteFavorite';
 import colors from '../assets/colors';
@@ -14,75 +10,56 @@ import { connect } from 'react-redux';
 
 AntDesign.loadFont()
 
-class Favorite extends React.Component {
+const Favorite = props => {
 
-    state = {
-        deleteFavoriteMode: false,
-    }
+    const [deleteFavoriteMode, setDeleteFavoriteMode] = useState(false)
 
     deleteFavorite = async () => {
         console.log('in deleteFavorite')
-        this.setState({ deleteFavoriteMode: true} )
+        setDeleteFavoriteMode(true)
     }
 
     closeDeleteFavoriteModal = () => {
-        this.setState({deleteFavoriteMode: false})
+        setDeleteFavoriteMode(false)
     }
 
     returnToCameraPage = () => {
-        this.props.history.push('/camera')
-    }
-
-    componentDidMount() {
-        
+        props.history.push('/camera')
     }
     
-    render() {
-        
-        // The below problem was solved. Firebase attached hidden metadata to database objects it returns. The actual data is nested two levels deeper in the object.
-        // SOLUTION: just use the .val() method 
-        //
-        // This is an interesting problem that I do not understand at all, but accessing the '_ref' attribute of the object 
-        // returns what should be returned from the 'url' attribute. If the object (this.props.reduxState.favoriteUrl) is 
-        // logged, it appears normal with attributes as intended. However, the values of these attributes return undefined
-        // when trying to access them with the intended keys. Looping through the object and exposing the true keys provided
-        // a solution to the problem, but it is still shrouded in mystery...
-        //
-
-        return (
-            <>
-                <DeleteFavorite visible={this.state.deleteFavoriteMode} closeDeleteFavoriteModal={this.closeDeleteFavoriteModal} returnToCameraPage={this.returnToCameraPage}></DeleteFavorite>
-                <View style={{ flex: 1 }}>
-                    <ImageBackground
-                    style={{ flex: 1 }}
-                    source={{ uri: this.props.reduxState.userData.favorite.url }}>
-                        <View style={styles.iconContainer}>
-                            <View style={styles.topIcons}>
-                            </View>
-                            <View style={styles.bottomIcons}>
-                                <TouchableOpacity
-                                    style={styles.return}
-                                    onPress={this.returnToCameraPage}>
-                                    <MaterialIcons
-                                        name='keyboard-return'
-                                        style={styles.returnIcon}
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={styles.deleteFavorite}
-                                    onPress={this.deleteFavorite}>
-                                    <AntDesign
-                                        name='delete'
-                                        style={styles.deleteFavoriteIcon}
-                                    />
-                                </TouchableOpacity>
-                            </View>
+    return (
+        <>
+            <DeleteFavorite visible={deleteFavoriteMode} closeDeleteFavoriteModal={closeDeleteFavoriteModal} returnToCameraPage={returnToCameraPage}></DeleteFavorite>
+            <View style={{ flex: 1 }}>
+                <ImageBackground
+                style={{ flex: 1 }}
+                source={{ uri: props.reduxState.userData.favorite.url }}>
+                    <View style={styles.iconContainer}>
+                        <View style={styles.topIcons}>
                         </View>
-                    </ImageBackground>
-                </View>
-            </>
-        )
-    }
+                        <View style={styles.bottomIcons}>
+                            <TouchableOpacity
+                                style={styles.return}
+                                onPress={returnToCameraPage}>
+                                <MaterialIcons
+                                    name='keyboard-return'
+                                    style={styles.returnIcon}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.deleteFavorite}
+                                onPress={deleteFavorite}>
+                                <AntDesign
+                                    name='delete'
+                                    style={styles.deleteFavoriteIcon}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </ImageBackground>
+            </View>
+        </>
+    )
 }
 
 const styles = StyleSheet.create({
