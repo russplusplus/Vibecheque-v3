@@ -22,7 +22,7 @@ function ViewInbox (props) {
     const [newFavoriteMode, setNewFavoriteMode] = useState(false)
     const [starColor, setStarColor] = useState('white')
     const [starBorderColor, setStarBorderColor] = useState('black')
-    const [dislikeBorderColor, setDislikeBorderColor] = useState('black')
+    const [dislikeIconColor, setDislikeIconColor] = useState('black')
     const [dislikeBackgroundColor, setDislikeBackgroundColor] = useState(colors.red)
     const [url, setUrl] = useState('')
     const [responseMessage, setResponseMessage] = useState('')
@@ -78,7 +78,7 @@ function ViewInbox (props) {
         setStarColor(colors.cream)
         setStarBorderColor(colors.cream)
         setDislikeBackgroundColor('transparent')
-        setDislikeBorderColor('transparent')
+        setDislikeIconColor('transparent')
     }
 
     report = async () => {
@@ -168,25 +168,26 @@ function ViewInbox (props) {
                                         style={{
                                             justifyContent: 'center',
                                             alignItems: 'center',
-                                            borderColor: dislikeBorderColor,
-                                            borderWidth: 0,
                                             backgroundColor: dislikeBackgroundColor,
                                             width: '14%',
                                             aspectRatio: 1,
-                                            borderRadius: 10
+                                            borderRadius: 10,
+                                            marginBottom: 6,
+                                            marginLeft: 6
                                         }}
                                         onPress={() => handleReportPress()}>
                                         <FontAwesome
                                             name='thumbs-down'
                                             style={{
-                                                color: dislikeBorderColor,
+                                                color: dislikeIconColor,
                                                 fontSize: 40
                                             }}
                                         />
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={{
-                                            justifyContent: Platform.OS === 'ios' ? 'flex-end' : 'center',
+                        
+                                            justifyContent: Platform.OS === 'ios' ? 'center' : 'center',
                                             alignItems: 'center',
                                             borderColor: starBorderColor,
                                             borderWidth: 0,
@@ -194,16 +195,15 @@ function ViewInbox (props) {
                                             width: '14%',
                                             aspectRatio: 1,
                                             borderRadius: 10,
-
+                                            marginBottom: 6,
+                                            marginRight: 6
                                         }}
                                         onPress={() => handleFavoritePress()}>
                                         <Ionicons
                                             name='md-star'
                                             style={{
                                                 color: starColor,
-                                                fontSize: 44,
-                                                paddingBottom: 1
-
+                                                fontSize: 36,
                                             }}
                                         />
                                     </TouchableOpacity>
