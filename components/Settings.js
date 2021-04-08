@@ -127,7 +127,7 @@ class Settings extends React.Component {
                             <Slider
                                 value={this.props.reduxState.newSettings.distance}
                                 onValueChange={(val) => this.changeDistance(Math.round(val))}
-                                style={{width: 300, height: 60}}
+                                style={{width: 280, height: 60}}
                                 minimumValue={1}
                                 maximumValue={100}
                                 minimumTrackTintColor={colors.green}
@@ -211,7 +211,9 @@ const styles = StyleSheet.create({
     sliderContainer: {
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        // paddingLeft: 50,
+        // paddingRight: 50    
     },
     setting: {
         display: 'flex',

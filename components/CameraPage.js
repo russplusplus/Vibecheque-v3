@@ -89,6 +89,7 @@ const CameraPage = props => {
     sendImage = async () => {
         console.log('in sendImage. didTheyFavorite:', props.reduxState.didTheyFavorite)
         if (props.reduxState.userID) {
+            console.log('props.reduxState.userID found.', props.reduxState.userID)
             setIsSending(true)
             
             // generate filename from current time in milliseconds
@@ -173,8 +174,8 @@ const CameraPage = props => {
     }
 
     useEffect(() => {
-        console.log('this.props.reduxState.userData:', props.reduxState.userData)
-        setUid()
+        console.log('props.reduxState.userData:', props.reduxState.userData)
+        //setUid()
         getUserData()
         props.dispatch({  // updates user's divice registration token in database
             type: 'GET_REGISTRATION_TOKEN'
@@ -352,28 +353,23 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around'
     },  
     viewInbox: {
-        justifyContent: Platform.OS === 'ios' ? 'flex-end' : 'flex-end',
+        justifyContent: Platform.OS === 'ios' ? 'center' : 'center',
         alignItems: 'center',
-        borderColor: 'black',
-        borderWidth: 0,
         backgroundColor: colors.cream,
         width: '14%',
         aspectRatio: 1,
         borderRadius: 10,
-        //paddingBottom: Platform.OS === 'ios' ? 2 : 1
+        //paddingBottom: Platform.OS === 'ios' ? 0 : 2,
         marginBottom: 6,
         marginLeft: 6
     },
     viewFavorite: {
-        justifyContent: Platform.OS === 'ios' ? 'flex-end' : 'flex-end',
+        justifyContent: Platform.OS === 'ios' ? 'center' : 'center',
         alignItems: 'center',
-        borderColor: 'black',
-        borderWidth: 0,
         backgroundColor: colors.blue,
         width: '14%',
         aspectRatio: 1,
         borderRadius: 10,
-        paddingBottom: Platform.OS === 'ios' ? 1 : 4,
         marginBottom: 6,
         marginRight: 6
     },
@@ -404,7 +400,7 @@ const styles = StyleSheet.create({
     },
     favoriteIcon: {
         color: 'white',
-        fontSize: 44
+        fontSize: 36
     },
     wheel: {
         alignSelf: 'center',

@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
     },
     return: {
-        justifyContent: Platform.OS === 'ios' ? 'flex-end' : 'flex-end',
+        justifyContent: Platform.OS === 'ios' ? 'center' : 'center',
         alignItems: 'center',
         borderColor: 'black',
         borderWidth: 0,
@@ -118,12 +118,12 @@ const styles = StyleSheet.create({
         width: '14%',
         aspectRatio: 1,
         borderRadius: 10,
-        paddingBottom: Platform.OS === 'ios' ? 2 : 4,
+        paddingTop: Platform.OS === 'ios' ? 2 : 1,
         marginBottom: 6,
         marginLeft: 6
     },
     deleteFavorite: {
-        justifyContent: Platform.OS === 'ios' ? 'flex-end' : 'flex-end',
+        justifyContent: Platform.OS === 'ios' ? 'center' : 'center',
         alignItems: 'center',
         borderColor: 'black',
         borderWidth: 0,
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
         width: '14%',
         aspectRatio: 1,
         borderRadius: 10,
-        paddingBottom: Platform.OS === 'ios' ? 1 : 6,
+        paddingTop: Platform.OS === 'ios' ? 2 : 1,
         marginBottom: 6,
         marginRight: 6
     },

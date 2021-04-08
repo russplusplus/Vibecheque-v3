@@ -5,6 +5,7 @@ import storage from '@react-native-firebase/storage';
 function* indicateFavorite(action) {
     console.log('in login saga')
     let reduxState = yield select()
+    console.log('userData.favorite.name:', reduxState.userData.favorite.name)
 
     yield put({
         type: 'SET_DID_THEY_FAVORITE',

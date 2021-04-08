@@ -73,7 +73,9 @@ const styles = StyleSheet.create({
         width: '14%',
         aspectRatio: 1,
         borderRadius: 10,
-        paddingTop: 2
+        paddingTop: 2,
+        marginBottom: 6,
+        marginLeft: 6
     },
     sendImage: {
         flexDirection: 'column',
@@ -85,7 +87,9 @@ const styles = StyleSheet.create({
         width: '14%',
         aspectRatio: 1,
         borderRadius: 10,
-        paddingTop: 2
+        paddingTop: 2,
+        marginBottom: 6,
+        marginRight: 6
     },
     wheel: {
         alignSelf: 'center',
