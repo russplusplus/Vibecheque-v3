@@ -93,18 +93,15 @@ const styles = StyleSheet.create({
     },
     wheel: {
         alignSelf: 'center',
-        transform: Platform.OS === 'ios' ? [{ scale: 2 }] : [{ scale: 1 }],
+        transform: Platform.OS === 'ios' ? [{ scale: 1.7 }] : [{ scale: 1 }],
         marginBottom: 1
     },
     cancelIcon: {
-        height: Platform.OS === 'ios' ? '87%' : '91%',
         color: 'black',
         fontSize: 44,
-        // borderWidth: 2,
     },
     sendImageIcon: {
-        height: Platform.OS === 'ios' ? '87%' : '91%',
         color: 'black',
-        fontSize: 44
+        fontSize: 34
     }
 })

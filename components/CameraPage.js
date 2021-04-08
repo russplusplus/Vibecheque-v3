@@ -136,7 +136,7 @@ const CameraPage = props => {
     }
 
     viewFavorite = () => {
-        console.log('in viewFavorite')
+        console.log('in viewFavorite. props.reduxState.userData.favorite:', props.reduxState.userData.favorite)
         if (props.reduxState.userData.favorite) {
             props.history.push('/favorite')
         } else {
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
         width: '14%',
         aspectRatio: 1,
         borderRadius: 10,
-        //paddingBottom: Platform.OS === 'ios' ? 0 : 2,
+        paddingBottom: Platform.OS === 'ios' ? 0 : 0,
         marginBottom: 6,
         marginLeft: 6
     },

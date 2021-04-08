@@ -3,9 +3,9 @@ import database from '@react-native-firebase/database';
 import storage from '@react-native-firebase/storage';
 
 function* indicateFavorite(action) {
-    console.log('in login saga')
+    console.log('in indicateFavorite saga')
     let reduxState = yield select()
-    console.log('userData.favorite.name:', reduxState.userData.favorite.name)
+    console.log('userID:', reduxState.userID)
 
     yield put({
         type: 'SET_DID_THEY_FAVORITE',
@@ -17,6 +17,7 @@ function* indicateFavorite(action) {
         yield storage().ref(`images/${reduxState.userData.favorite.name}`).delete();
     }
 
+    console.log('right before reduxState.userID')
     let favRef = 'users/' + reduxState.userID + '/favorite';
     console.log('in indicateFavorite. favRef:', favRef)
     let favObj = {
