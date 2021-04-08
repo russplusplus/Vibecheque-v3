@@ -4,23 +4,21 @@ import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-community/async-storage';
 import colors from '../assets/colors';
 
-
 import { connect } from 'react-redux';
 
-class DeleteFavorite extends React.Component {
+const DeleteFavorite = props => {
 
     deleteFavorite = () => {
         console.log('in delete function');
         //actually delete image
-        this.props.dispatch({
+        props.dispatch({
             type: 'DELETE_FAVORITE'
         })
-        this.props.returnToCameraPage()
+        props.returnToCameraPage()
     }
 
-    render() {
         return (
-            <Modal visible={this.props.visible} animationType='slide' transparent={true} hasBackdrop={true} backdropColor={'black'} backdropOpacity={0.70}>
+            <Modal visible={props.visible} animationType='slide' transparent={true} hasBackdrop={true} backdropColor={'black'} backdropOpacity={0.70}>
                 <View style={{
                     flex:1, 
                     alignItems: 'center', 
@@ -52,7 +50,7 @@ class DeleteFavorite extends React.Component {
                         The image will be permanently deleted.
                     </Text>
                     <TouchableOpacity 
-                        onPress={this.deleteFavorite} 
+                        onPress={deleteFavorite} 
                         style={{ 
                             width: '75%',
                             height: 40,
@@ -73,7 +71,7 @@ class DeleteFavorite extends React.Component {
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
-                        onPress={this.props.closeDeleteFavoriteModal} 
+                        onPress={props.closeDeleteFavoriteModal} 
                         style={{ 
                             width: '75%',
                             height: 40,
@@ -96,7 +94,6 @@ class DeleteFavorite extends React.Component {
                 </View>  
             </Modal>
         )
-    }
 }
 
 const mapReduxStateToProps = reduxState => ({
