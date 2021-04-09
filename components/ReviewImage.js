@@ -5,7 +5,7 @@ import colors from '../assets/colors';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-export default ReviewImage = (props) => {
+ReviewImage = props => {
         return (
             <Modal isVisible={props.visible} animationInTiming={0.1} animationOutTiming={0.1} style={styles.modal}>
                 <ImageBackground
@@ -105,3 +105,5 @@ const styles = StyleSheet.create({
         fontSize: 34
     }
 })
+
+export default ReviewImage

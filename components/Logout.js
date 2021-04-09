@@ -3,33 +3,31 @@ import { View, Text, TextInput, StyleSheet, Button, Platform, TouchableOpacity, 
 import Modal from 'react-native-modal';
 import colors from '../assets/colors';
 
-class Logout extends React.Component {
+Logout = props => {
 
-    render() {
-        return (
-            <Modal isVisible={this.props.visible} animationIn='slideInDown' animationOut='slideOutUp'>
-                <View style={styles.container}>
-                    <Text style={styles.text}>Log out?</Text>
-                    <TouchableOpacity 
-                        onPress={() => this.props.logout()} 
-                        style={styles.yesButton}>
-                        <Text
-                            style={styles.yesButtonText}>
-                            Yes
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        onPress={() => this.props.toggleLogoutMode()} 
-                        style={styles.cancelButton}>
-                        <Text
-                            style={styles.cancelButtonText}>
-                            Cancel
-                        </Text>
-                    </TouchableOpacity>                    
-                </View>   
-            </Modal>
-        )
-    }
+    return (
+        <Modal isVisible={props.visible} animationIn='slideInDown' animationOut='slideOutUp'>
+            <View style={styles.container}>
+                <Text style={styles.text}>Log out?</Text>
+                <TouchableOpacity 
+                    onPress={() => props.logout()} 
+                    style={styles.yesButton}>
+                    <Text
+                        style={styles.yesButtonText}>
+                        Yes
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                    onPress={() => props.toggleLogoutMode()} 
+                    style={styles.cancelButton}>
+                    <Text
+                        style={styles.cancelButtonText}>
+                        Cancel
+                    </Text>
+                </TouchableOpacity>                    
+            </View>   
+        </Modal>
+    )
 }
 
 const styles = StyleSheet.create({

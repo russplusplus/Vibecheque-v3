@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Button, Platform, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Modal from 'react-native-modal';
 
@@ -9,19 +9,17 @@ import colors from '../assets/colors';
 import { connect } from 'react-redux';
 import database from '@react-native-firebase/database';
 
-class Settings extends React.Component {
+Settings = props => {
 
-    state = {
-        isSaving: false
-    }
+    const [isSaving, setIsSaving] = useState(false)
 
     toggleLeftHandedMode = (val) => {
         console.log('in toggleLeftHandedMode. val:', val)
         console.log('typeof val:', typeof(val))
-        this.props.dispatch({
+        props.dispatch({
             type: 'SET_NEW_SETTINGS',
             payload: {
-                ...this.props.reduxState.newSettings,
+                ...props.reduxState.newSettings,
                 leftHandedMode: val
             }
         })
@@ -29,10 +27,10 @@ class Settings extends React.Component {
 
     toggleLocation = (val) => {
         console.log('in toggleLocation. val:', val)
-        this.props.dispatch({
+        props.dispatch({
             type: 'SET_NEW_SETTINGS',
             payload: {
-                ...this.props.reduxState.newSettings,
+                ...props.reduxState.newSettings,
                 location: val
             }
         })
@@ -40,10 +38,10 @@ class Settings extends React.Component {
 
     changeDistance = (val) => {
         //console.log('in changeDistance. Math.round(val):', Math.round(val))
-        this.props.dispatch({
+        props.dispatch({
             type: 'SET_NEW_SETTINGS',
             payload: {
-                ...this.props.reduxState.newSettings,
+                ...props.reduxState.newSettings,
                 distance: val
             }
         })
@@ -51,123 +49,113 @@ class Settings extends React.Component {
 
     saveSettings = async () => {
         console.log('in saveSettings')
-        this.setState({
-            isSaving: true
-        })
+        setIsSaving(true)
 
         // update database
         await database()
-            .ref(`users/${this.props.reduxState.userID}/settings`)
-            .set(this.props.reduxState.newSettings)
+            .ref(`users/${props.reduxState.userID}/settings`)
+            .set(props.reduxState.newSettings)
 
         // update redux userData, rather than doing another GET_USER_DATA
-        await this.props.dispatch({
+        await props.dispatch({
             type: 'SET_USER_DATA',
             payload: {
-                ...this.props.reduxState.userData,
-                settings: this.props.reduxState.newSettings
+                ...props.reduxState.userData,
+                settings: props.reduxState.newSettings
             }
         })
-        this.props.toggleSettingsMode()
-        this.setState({
-            isSaving: false
-        })
+        props.toggleSettingsMode()
+        setIsSaving(false)
     }
 
     cancel = async () => {
-        await this.props.dispatch({
+        await props.dispatch({
             type: 'SET_NEW_SETTINGS',
-            payload: this.props.reduxState.userData.settings
+            payload: props.reduxState.userData.settings
         })
-        this.props.toggleSettingsMode()
+        props.toggleSettingsMode()
     }
 
-    componentDidMount() {
-       
-    }
-
-    render() {
-        return (
-            <Modal isVisible={this.props.visible} animationIn='slideInDown' animationOut='slideOutUp'>
-                <View style={styles.container}>
-                    <Text style={styles.title}>Settings</Text>
-                    <View style={styles.settingRow}>
-                        <Text style={styles.setting}> </Text>
+    return (
+        <Modal isVisible={props.visible} animationIn='slideInDown' animationOut='slideOutUp'>
+            <View style={styles.container}>
+                <Text style={styles.title}>Settings</Text>
+                <View style={styles.settingRow}>
+                    <Text style={styles.setting}> </Text>
+                </View>
+                <View style={styles.settingRow}>
+                    <Text style={styles.setting}>Left-handed mode:</Text>
+                    <ToggleSwitch
+                        isOn={props.reduxState.newSettings.leftHandedMode}
+                        onColor={colors.green}
+                        offColor="grey"
+                        size="medium"
+                        onToggle={(isOn) => toggleLeftHandedMode(isOn)}
+                    />
+                </View>
+                <View style={styles.settingRow}>
+                    <Text style={styles.setting}>Location:</Text>
+                    <ToggleSwitch
+                        isOn={props.reduxState.newSettings.location}
+                        onColor={colors.green}
+                        offColor="grey"
+                        size="medium"
+                        onToggle={(isOn) => toggleLocation(isOn)}
+                    />
+                </View>
+                {props.reduxState.newSettings.location ?
+                <View style={styles.settingDistanceRow}>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between'
+                    }}>
+                        <Text style={styles.setting}>Max distance:</Text>
+                        <Text style={styles.setting}>{props.reduxState.newSettings.distance} miles</Text>
                     </View>
-                    <View style={styles.settingRow}>
-                        <Text style={styles.setting}>Left-handed mode:</Text>
-                        <ToggleSwitch
-                            isOn={this.props.reduxState.newSettings.leftHandedMode}
-                            onColor={colors.green}
-                            offColor="grey"
-                            size="medium"
-                            onToggle={(isOn) => this.toggleLeftHandedMode(isOn)}
+                    <View style={styles.sliderContainer}>
+                        <Slider
+                            value={props.reduxState.newSettings.distance}
+                            onValueChange={(val) => changeDistance(Math.round(val))}
+                            style={{width: 280, height: 60}}
+                            minimumValue={1}
+                            maximumValue={100}
+                            minimumTrackTintColor={colors.green}
+                            maximumTrackTintColor="grey"
+                            //thumbTintColor={colors.green}
                         />
                     </View>
-                    <View style={styles.settingRow}>
-                        <Text style={styles.setting}>Location:</Text>
-                        <ToggleSwitch
-                            isOn={this.props.reduxState.newSettings.location}
-                            onColor={colors.green}
-                            offColor="grey"
-                            size="medium"
-                            onToggle={(isOn) => this.toggleLocation(isOn)}
-                        />
-                    </View>
-                    {this.props.reduxState.newSettings.location ?
-                    <View style={styles.settingDistanceRow}>
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between'
-                        }}>
-                            <Text style={styles.setting}>Max distance:</Text>
-                            <Text style={styles.setting}>{this.props.reduxState.newSettings.distance} miles</Text>
-                        </View>
-                        <View style={styles.sliderContainer}>
-                            <Slider
-                                value={this.props.reduxState.newSettings.distance}
-                                onValueChange={(val) => this.changeDistance(Math.round(val))}
-                                style={{width: 280, height: 60}}
-                                minimumValue={1}
-                                maximumValue={100}
-                                minimumTrackTintColor={colors.green}
-                                maximumTrackTintColor="grey"
-                                //thumbTintColor={colors.green}
-                            />
-                        </View>
-                    </View>
+                </View>
+                :
+                <View style={styles.settingDistanceRow}>
+                    <Text style={styles.setting}> </Text>
+                </View>
+                }
+                <TouchableOpacity 
+                    onPress={saveSettings} 
+                    style={styles.yesButton}>
+                    {isSaving ?
+                    <ActivityIndicator
+                        style={styles.wheel}
+                        color='black'
+                    />
                     :
-                    <View style={styles.settingDistanceRow}>
-                        <Text style={styles.setting}> </Text>
-                    </View>
+                    <Text
+                        style={styles.yesButtonText}>
+                        Save
+                    </Text>
                     }
-                    <TouchableOpacity 
-                        onPress={() => this.saveSettings()} 
-                        style={styles.yesButton}>
-                        {this.state.isSaving ?
-                        <ActivityIndicator
-                            style={styles.wheel}
-                            color='black'
-                        />
-                        :
-                        <Text
-                            style={styles.yesButtonText}>
-                            Save
-                        </Text>
-                        }
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        onPress={() => this.cancel()} 
-                        style={styles.cancelButton}>
-                        <Text
-                            style={styles.cancelButtonText}>
-                            Cancel
-                        </Text>
-                    </TouchableOpacity>                    
-                </View>   
-            </Modal>
-        )
-    }
+                </TouchableOpacity>
+                <TouchableOpacity 
+                    onPress={cancel} 
+                    style={styles.cancelButton}>
+                    <Text
+                        style={styles.cancelButtonText}>
+                        Cancel
+                    </Text>
+                </TouchableOpacity>                    
+            </View>   
+        </Modal>
+    )
 }
 
 const styles = StyleSheet.create({

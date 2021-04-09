@@ -11,7 +11,7 @@ NewFavorite = props => {
         props.indicateFavorite()
         props.closeNewFavoriteModal();
     }    
-    // this modal doesn't dim the background like others (logout, etc.) and idk why not
+
     return (
         <Modal isVisible={props.visible} animationIn='slideInUp' animationOut='slideOutDown'>
             <View style={{

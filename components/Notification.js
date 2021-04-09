@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
 import colors from '../assets/colors';
 
-Notification = (props) => {
+Notification = props => {
     closeNotification = async () => {
         props.dispatch({
             type: 'GET_USER_DATA'
