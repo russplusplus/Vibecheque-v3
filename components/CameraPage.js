@@ -153,7 +153,7 @@ const CameraPage = props => {
         const permissionSettings = await messaging().requestPermission();
 
         if (permissionSettings) {
-            console.log('Permission settings:', permissionSettings);
+            console.log('Messaging permission settings:', permissionSettings);
         }
     }
 
