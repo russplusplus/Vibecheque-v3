@@ -1135,6 +1135,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/slider/-/slider-3.0.3.tgz#830167fd757ba70ac638747ba3169b2dbae60330"
   integrity sha512-8IeHfDwJ9/CTUwFs6x90VlobV3BfuPgNLjTgC6dRZovfCWigaZwVNIFFJnHBakK3pW2xErAPwhdvNR4JeNoYbw==
 
+"@react-native-firebase/admob@^11.2.0":
+  version "11.2.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/admob/-/admob-11.2.0.tgz#6fd967f5fd8ccff11f3dc1e3e3c6068b11e3eb5c"
+  integrity sha512-9pUDfDdVZZwZnwoOZR807mTzlKgbNECq6NwTnNIqMMJG/Id6QpBBMki3O/c2AmK6ydzM31eHP4JKNErKqC7UZA==
+
 "@react-native-firebase/app@^11.2.0":
   version "11.2.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-11.2.0.tgz#5716bb264cf0a500fb40181bd338eb3067d36c94"
