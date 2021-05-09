@@ -88,10 +88,12 @@ const CameraPage = props => {
 
     handlePressSend = () => {
         setIsSending(true)
-        console.log('in sendImage. didTheyFavorite:', props.reduxState.didTheyFavorite)
+        console.log('in handlePressSend. didTheyFavorite:', props.reduxState.didTheyFavorite)
         console.log('isSending:', isSending)
         console.log('isAdLoaded:', isAdLoaded)
-        if (props.reduxState.userID && isAdLoaded) {
+
+        // if (props.reduxState.userID && isAdLoaded) {
+        if (props.reduxState.userID) {
             sendImage()
         } else {
             if (!props.reduxState.userID) {
@@ -132,7 +134,7 @@ const CameraPage = props => {
 
 
         //show ad here
-        rewarded.show()
+        //rewarded.show()
 
 
 
