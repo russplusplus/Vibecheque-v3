@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import storage from '@react-native-firebase/storage';
 import messaging from '@react-native-firebase/messaging';
+import { RewardedAd, RewardedAdEventType, TestIds } from '@react-native-firebase/admob';
 
 import Logout from './Logout';
 import ReviewImage from './ReviewImage';
@@ -21,6 +22,9 @@ import colors from '../assets/colors';
 FontAwesome.loadFont()
 Ionicons.loadFont()
 
+const platformSpecificAdUnitId = Platform.OS === 'ios' ? 'ca-app-pub-9408101332805838~7599720393' : 'ca-app-pub-9408101332805838~8001662185'
+const adUnitId = __DEV__ ? TestIds.REWARDED : platformSpecificAdUnitId;
+const rewarded = RewardedAd.createForAdRequest(adUnitId);
 
 const CameraPage = props => {
 
@@ -32,19 +36,8 @@ const CameraPage = props => {
     const [capturedImageUri, setCapturedImageUri] = useState('')
     const [isSending, setIsSending] = useState(false)
     const [isInboxLoading, setIsInboxLoading] = useState(false)
+    const [isAdLoaded, setIsAdLoaded] = useState(false)
     const cameraRef = useRef(null)
-
-    // state = {
-    //     isLogoutMode: false,
-    //     isReviewMode: false,
-    //     isNoFavoriteMode: false,
-    //     isSettingsMode: false,
-    //     cameraType: RNCamera.Constants.Type.back,
-    //     capturedImageUri: '',
-    //     uid: '',
-    //     isSending: false,
-    //     isInboxLoading: false
-    // }
 
     logout = () => {
         console.log('in logout function')
@@ -77,6 +70,13 @@ const CameraPage = props => {
 
     takePicture = async () => {
         if (cameraRef) {
+            //load ad here
+            rewarded.load();
+
+
+
+
+
             const options = { quality: 1, base64: true };
             const data = await cameraRef.current.takePictureAsync(options);   //current? this attribute is new, as described in tutorial
             console.log('uri:', data.uri);
@@ -86,38 +86,62 @@ const CameraPage = props => {
         }
     }
 
-    sendImage = async () => {
-        console.log('in sendImage. didTheyFavorite:', props.reduxState.didTheyFavorite)
+    handlePressSend = () => {
+        setIsSending(true)
+        console.log('in handlePressSend. didTheyFavorite:', props.reduxState.didTheyFavorite)
+        console.log('isSending:', isSending)
+        console.log('isAdLoaded:', isAdLoaded)
+
+        // if (props.reduxState.userID && isAdLoaded) {
         if (props.reduxState.userID) {
-            console.log('props.reduxState.userID found.', props.reduxState.userID)
-            setIsSending(true)
-            
-            // generate filename from current time in milliseconds
-            let filename = new Date().getTime();
-            console.log('filename:', filename)
-            const ref = storage().ref('images/' + String(filename));
-            const metadata = {
-                customMetadata: {
-                    fromUid: props.reduxState.userID,
-                    toUid: props.reduxState.respondingTo,
-                    didTheyFavorite: props.reduxState.didTheyFavorite
-                }
-            }
-            await ref.putFile(capturedImageUri, metadata);
-            
-            console.log('props.reduxState.respondingTo:', props.reduxState.respondingTo)
-            props.dispatch({  // image is sent, therefore not responding anymore 
-                type: 'SET_NOT_RESPONDING'
-            })
-            props.dispatch({  // if they favorite, this well be set back to false
-                type: 'SET_DID_THEY_FAVORITE',
-                payload: 'false'
-            })
-            toggleReviewMode()
-            setIsSending(false)
+            sendImage()
         } else {
-            console.log('userID not found')
+            if (!props.reduxState.userID) {
+                console.log('userID not found')
+            } else if (!isAdLoaded) {
+                console.log('ad not loaded')
+            } else {
+                console.log('???????')
+            }
         }
+    }
+
+    sendImage = async () => {
+        console.log('props.reduxState.userID found.', props.reduxState.userID)
+
+        // generate filename from current time in milliseconds
+        let filename = new Date().getTime();
+        console.log('filename:', filename)
+        const ref = storage().ref('images/' + String(filename));
+        const metadata = {
+            customMetadata: {
+                fromUid: props.reduxState.userID,
+                toUid: props.reduxState.respondingTo,
+                didTheyFavorite: props.reduxState.didTheyFavorite
+            }
+        }
+        await ref.putFile(capturedImageUri, metadata);
+        
+        console.log('props.reduxState.respondingTo:', props.reduxState.respondingTo)
+        props.dispatch({  // image is sent, therefore not responding anymore 
+            type: 'SET_NOT_RESPONDING'
+        })
+        props.dispatch({  // if they favorite, this well be set back to false
+            type: 'SET_DID_THEY_FAVORITE',
+            payload: 'false'
+        })
+
+
+
+        //show ad here
+        //rewarded.show()
+
+
+
+        toggleReviewMode()
+        setIsSending(false)
+
+
     }
 
     viewInbox = async () => {
@@ -184,29 +208,50 @@ const CameraPage = props => {
         requestUserPermission()
     }, [])
 
-    // componentDidMount = async () => {
-    //     console.log('this.props.reduxState.userData:', this.props.reduxState.userData)
-    //     let uid = JSON.parse(await AsyncStorage.getItem('user')).uid
-    //     console.log('uid:', uid)
-    //     this.props.dispatch({
-    //         type: 'SET_USER_ID',
-    //         payload: uid
-    //     })
-    //     await this.props.dispatch({
-    //         type: 'GET_USER_DATA'
-    //     })
-    //     this.props.dispatch({  // updates user's divice registration token in database
-    //         type: 'GET_REGISTRATION_TOKEN'
-    //     })
+    useEffect(() => {
+        console.log('isSending triggered.', isSending)
+    }, [isSending])
+
+    // useEffect(() => {
+    //     if (isSending) {
+    //         rewarded.show()
+    //     }
+    // }, [isAdLoaded])
+
+    useEffect(() => {
+        console.log('Mounted')
+    }, [])
+
+    useEffect(() => {
+        const eventListener = rewarded.onAdEvent((type, error, reward) => {
+            if (type === RewardedAdEventType.LOADED) {
+                console.log('ad is loaded')
+                setIsAdLoaded(true);
+                console.log('isSending:', isSending)
+                if (isSending) {
+                    sendImage()
+                }
+            }
+        
+            if (type === RewardedAdEventType.EARNED_REWARD) {
+                console.log('User earned reward of ', reward);
+            }
+        });
     
-    //     this.requestUserPermission()
-    // }
+        // Start loading the rewarded ad straight away
+        //rewarded.load();
+    
+        // Unsubscribe from events on unmount
+        return () => {
+            eventListener();
+        };
+    }, []);
 
     return (
         <>
             <View style={styles.container}>
                 <Logout visible={isLogoutMode} toggleLogoutMode={toggleLogoutMode} logout={logout}/>
-                <ReviewImage visible={isReviewMode} toggleReviewMode={toggleReviewMode} sendImage={sendImage} capturedImageUri={capturedImageUri} isSending={isSending}/>
+                <ReviewImage visible={isReviewMode} toggleReviewMode={toggleReviewMode} sendImage={handlePressSend} capturedImageUri={capturedImageUri} isSending={isSending}/>
                 <NoFavorite visible={isNoFavoriteMode} toggleNoFavoriteMode={toggleNoFavoriteMode}/>
                 <Settings visible={isSettingsMode} toggleSettingsMode={toggleSettingsMode}/>
                 <RNCamera

@@ -12,6 +12,17 @@
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
 
+
+
+
+#if RCT_DEV
+#import <React/RCTDevLoadingView.h>
+#endif
+
+
+
+
+
 #import <Firebase.h>
 
 static void InitializeFlipper(UIApplication *application) {
@@ -37,9 +48,12 @@ static void InitializeFlipper(UIApplication *application) {
 #endif
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
-                                                   moduleName:@"Vibecheque"
-                                            initialProperties:nil];
+  // RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge moduleName:@"Vibecheque" initialProperties:nil];
+
+#if RCT_DEV
+  [bridge moduleForClass:[RCTDevLoadingView class]];
+#endif
+  RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge moduleName:@"Vibecheque" initialProperties:nil];
 
   if (@available(iOS 13.0, *)) {
       rootView.backgroundColor = [UIColor systemBackgroundColor];

@@ -4,7 +4,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-community/async-storage';
 import database from '@react-native-firebase/database';
-//import { RewardedAd, TestIds } from '@react-native-firebase/admob';
+import { RewardedAd, RewardedAdEventType, TestIds } from '@react-native-firebase/admob';
 
 import Report from './Report';
 import NewFavorite from './NewFavorite';
@@ -12,9 +12,9 @@ import colors from '../assets/colors';
 
 import { connect } from 'react-redux';
 
-// const platformSpecificAdUnitId = Platform.OS === 'ios' ? 'ca-app-pub-9408101332805838~7599720393' : 'ca-app-pub-9408101332805838~8001662185'
-// const adUnitId = __DEV__ ? TestIds.REWARDED : platformSpecificAdUnitId;
-// const rewarded = RewardedAd.createForAdRequest(adUnitId);
+const platformSpecificAdUnitId = Platform.OS === 'ios' ? 'ca-app-pub-9408101332805838~7599720393' : 'ca-app-pub-9408101332805838~8001662185'
+const adUnitId = __DEV__ ? TestIds.REWARDED : platformSpecificAdUnitId;
+const rewarded = RewardedAd.createForAdRequest(adUnitId);
 
 function ViewInbox (props) {
 
@@ -24,25 +24,31 @@ function ViewInbox (props) {
     const [starBorderColor, setStarBorderColor] = useState('black')
     const [dislikeIconColor, setDislikeIconColor] = useState('black')
     const [dislikeBackgroundColor, setDislikeBackgroundColor] = useState(colors.red)
-    const [url, setUrl] = useState('')
     const [responseMessage, setResponseMessage] = useState('')
     const [isFavorited, setIsFavorited] = useState(false)
-    const [isReported, setIsReported] = useState(false)
+    // const [isAdloaded, setIsAdLoaded] = useState(false)
+    // const [hasPressedAnywhere, setHasPressedAnywhere] = useState(false)
 
     handlePressAnywhere = () => {
-        props.dispatch({    //dispatch is async- if it responds before the page is changed, there will be an error because the background of the page is deleted
-            type: 'DELETE_IMAGE',
-            payload: {
-                isFavorited: isFavorited
+        // setHasPressedAnywhere(true)
+        // if (isAdloaded) {
+        //     rewarded.show()
+            props.dispatch({    //dispatch is async- if it responds before the page is changed, there will be an error because the background of the page is deleted
+                type: 'DELETE_IMAGE',
+                payload: {
+                    isFavorited: isFavorited
+                }
+            }) // maybe we could shift the redux inbox here so it's updated right when history is pushed. It would redundantly reload but that might not be a problem
+            if (!isFavorited) {
+                props.dispatch({
+                    type: 'SET_DID_THEY_FAVORITE',
+                    payload: 'false'  //these are all strings because firebase storage metadata can't do booleans
+                })
             }
-        }) // maybe we could shift the redux inbox here so it's updated right when history is pushed. It would redundantly reload but that might not be a problem
-        if (!isFavorited) {
-            props.dispatch({
-                type: 'SET_DID_THEY_FAVORITE',
-                payload: 'false'  //these are all strings because firebase storage metadata can't do booleans
-            })
-        }
-        props.history.push('/camera')
+            props.history.push('/camera')
+        // } else {
+        //     console.log('ad is not loaded yet')
+        // }
     }
 
     handleFavoritePress = () => {
@@ -114,6 +120,33 @@ function ViewInbox (props) {
         props.history.push('/camera')
     }
 
+    // useEffect(() => {
+    //     if (hasPressedAnywhere) {
+    //         handlePressAnywhere()
+    //     }
+    // }, [isAdloaded])
+
+    // useEffect(() => {
+    //     const eventListener = rewarded.onAdEvent((type, error, reward) => {
+    //         if (type === RewardedAdEventType.LOADED) {
+    //             console.log('ad is loaded')
+    //             setIsAdLoaded(true);
+    //         }
+        
+    //         if (type === RewardedAdEventType.EARNED_REWARD) {
+    //             console.log('User earned reward of ', reward);
+    //         }
+    //     });
+    
+    //     // Start loading the rewarded ad straight away
+    //     rewarded.load();
+    
+    //     // Unsubscribe from events on unmount
+    //     return () => {
+    //         eventListener();
+    //     };
+    // }, []);
+
     useEffect(() => {
         // Set response message
         if (props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].isResponse) {
@@ -133,22 +166,7 @@ function ViewInbox (props) {
                 payload: props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].from
             })
         }
-        // this issue was solved long ago but I like remembering this nice note I left 
-        //Russ,
-        //
-        //You need to figure out how to get isResponding from the image.
-        //Right now, redux has an array of image names and the url of the
-        //first image in the queue. However, since we're gonna need the 
-        //isResponse boolean from each image too, it might be best to 
-        //change the array of strings to an array of objects, with all
-        //the data we'll need for each image. Maybe in the cameraPage 
-        //componentDidMount we could load the url for the first image
-        //in the queue. But maybe you'll think of a better way.
-        //
-        //Goodnight,
-        //
-        //Russ
-    })
+    }, [])
     
     return (
         <>

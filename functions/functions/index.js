@@ -75,8 +75,8 @@ exports.addImage = functions.storage.object('/images').onFinalize(async (object)
     console.log('response block recipientToken:', recipientToken)
     let payload = {
       notification: {
-        title: 'New Vibecheque response!',
-        body: 'Open the app to view it',
+        title: 'New response!',
+        body: 'Open Vibecheque to view it',
         imageUrl: 'https://my-cdn.com/app-logo.png',
       },
     }
@@ -159,7 +159,7 @@ exports.addImage = functions.storage.object('/images').onFinalize(async (object)
     let payload = {
       notification: {
         title: 'New Vibe!',
-        body: 'Open the app to view it.',
+        body: 'Open Vibecheque to view it.',
         imageUrl: 'https://my-cdn.com/app-logo.png',
       },
     }

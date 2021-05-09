@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { NativeRouter, Route, Switch } from "react-router-native";
+import { NativeRouter, Route, Switch } from 'react-router-native';
 import auth from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 
