@@ -301,13 +301,41 @@ const CameraPage = props => {
                             </TouchableOpacity>
                         </View>
                         {props.reduxState.respondingTo ?
-                            <View style={styles.respondingBottomIcons}>
+                            <View style={{
+                                flexDirection: props.reduxState.userData.settings.leftHandedMode ? 'row-reverse' : 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center'
+                            }}>
+                                <View style={{
+                                    alignItems: props.reduxState.userData && props.reduxState.userData.settings.leftHandedMode ? 'flex-start' : 'flex-end',
+                                    paddingRight: 3,
+                                    paddingLeft: 3,
+                                    opacity: '0%'
+                                }}>
+                                    <TouchableOpacity>
+                                        <Ionicons
+                                            name='camera-reverse-sharp'
+                                            style={styles.switchCameraIcon}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
                                 <TouchableOpacity onPress={takePicture}>
                                     <FontAwesome
                                         name='circle-thin'
                                         style={styles.captureIcon}
                                     />
                                 </TouchableOpacity>
+                                <View style={{
+                                    paddingRight: 3,
+                                    paddingLeft: 3
+                                }}>
+                                    <TouchableOpacity onPress={switchCamera}>
+                                        <Ionicons
+                                            name='camera-reverse-sharp'
+                                            style={styles.switchCameraIcon}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         :
                             <View style={styles.bottomIcons}>
@@ -398,7 +426,7 @@ const styles = StyleSheet.create({
     },
     respondingBottomIcons: {
         flexDirection: 'row',
-        justifyContent: 'space-around'
+        justifyContent: 'space-between'
     },  
     viewInbox: {
         justifyContent: Platform.OS === 'ios' ? 'flex-end' : 'flex-end',
