@@ -25,16 +25,16 @@ Settings = props => {
         })
     }
 
-    toggleLocation = (val) => {
-        console.log('in toggleLocation. val:', val)
-        props.dispatch({
-            type: 'SET_NEW_SETTINGS',
-            payload: {
-                ...props.reduxState.newSettings,
-                location: val
-            }
-        })
-    }
+    // toggleLocation = (val) => {
+    //     console.log('in toggleLocation. val:', val)
+    //     props.dispatch({
+    //         type: 'SET_NEW_SETTINGS',
+    //         payload: {
+    //             ...props.reduxState.newSettings,
+    //             location: val
+    //         }
+    //     })
+    // }
 
     changeDistance = (val) => {
         //console.log('in changeDistance. Math.round(val):', Math.round(val))
@@ -93,7 +93,7 @@ Settings = props => {
                         onToggle={(isOn) => toggleLeftHandedMode(isOn)}
                     />
                 </View>
-                <View style={styles.settingRow}>
+                {/* <View style={styles.settingRow}>
                     <Text style={styles.setting}>Location:</Text>
                     <ToggleSwitch
                         isOn={props.reduxState.newSettings.location}
@@ -102,8 +102,8 @@ Settings = props => {
                         size="medium"
                         onToggle={(isOn) => toggleLocation(isOn)}
                     />
-                </View>
-                {props.reduxState.newSettings.location ?
+                </View> */}
+                {/* {props.reduxState.newSettings.location ?
                 <View style={styles.settingDistanceRow}>
                     <View style={{
                         flexDirection: 'row',
@@ -129,30 +129,32 @@ Settings = props => {
                 <View style={styles.settingDistanceRow}>
                     <Text style={styles.setting}> </Text>
                 </View>
-                }
-                <TouchableOpacity 
-                    onPress={saveSettings} 
-                    style={styles.yesButton}>
-                    {isSaving ?
-                    <ActivityIndicator
-                        style={styles.wheel}
-                        color='black'
-                    />
-                    :
-                    <Text
-                        style={styles.yesButtonText}>
-                        Save
-                    </Text>
-                    }
-                </TouchableOpacity>
-                <TouchableOpacity 
-                    onPress={cancel} 
-                    style={styles.cancelButton}>
-                    <Text
-                        style={styles.cancelButtonText}>
-                        Cancel
-                    </Text>
-                </TouchableOpacity>                    
+                } */}
+                <View style={styles.buttonsRow}>
+                    <TouchableOpacity 
+                        onPress={saveSettings} 
+                        style={styles.yesButton}>
+                        {isSaving ?
+                        <ActivityIndicator
+                            style={styles.wheel}
+                            color='black'
+                        />
+                        :
+                        <Text
+                            style={styles.yesButtonText}>
+                            Save
+                        </Text>
+                        }
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        onPress={cancel} 
+                        style={styles.cancelButton}>
+                        <Text
+                            style={styles.cancelButtonText}>
+                            Cancel
+                        </Text>
+                    </TouchableOpacity>   
+                </View>           
             </View>   
         </Modal>
     )
@@ -184,6 +186,16 @@ const styles = StyleSheet.create({
         //height: 40,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        //borderWidth: 2,
+        paddingLeft: 0,
+        paddingBottom: 16
+    },
+    buttonsRow: {
+        width: '100%',
+        //height: 40,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         //borderWidth: 2,
         paddingLeft: 0,
         paddingBottom: 16
