@@ -174,10 +174,13 @@ const CameraPage = props => {
     }
 
     requestUserPermission = async () => {
-        const permissionSettings = await messaging().requestPermission();
+        const authStatus = await messaging().requestPermission();
+        const enabled =
+            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-        if (permissionSettings) {
-            console.log('Messaging permission settings:', permissionSettings);
+        if (enabled) {
+            console.log('Authorization status:', authStatus);
         }
     }
 
@@ -398,7 +401,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around'
     },  
     viewInbox: {
-        justifyContent: Platform.OS === 'ios' ? 'center' : 'center',
+        justifyContent: Platform.OS === 'ios' ? 'flex-end' : 'flex-end',
         alignItems: 'center',
         backgroundColor: colors.cream,
         width: '14%',
