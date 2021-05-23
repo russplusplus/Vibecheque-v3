@@ -310,7 +310,7 @@ const CameraPage = props => {
                                     alignItems: props.reduxState.userData && props.reduxState.userData.settings.leftHandedMode ? 'flex-start' : 'flex-end',
                                     paddingRight: 3,
                                     paddingLeft: 3,
-                                    opacity: '0%'
+                                    opacity: 0
                                 }}>
                                     <TouchableOpacity>
                                         <Ionicons
