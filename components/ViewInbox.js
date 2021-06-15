@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Button, ImageBackground, TouchableOpacity, TouchableWithoutFeedback, Platform } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import AsyncStorage from '@react-native-community/async-storage';
 import database from '@react-native-firebase/database';
 import { RewardedAd, RewardedAdEventType, TestIds } from '@react-native-firebase/admob';
 
@@ -29,14 +28,15 @@ function ViewInbox (props) {
     // const [isAdloaded, setIsAdLoaded] = useState(false)
     // const [hasPressedAnywhere, setHasPressedAnywhere] = useState(false)
 
-    handlePressAnywhere = () => {
+    handlePressAnywhere = async () => {
         // setHasPressedAnywhere(true)
         // if (isAdloaded) {
         //     rewarded.show()
             props.dispatch({    //dispatch is async- if it responds before the page is changed, there will be an error because the background of the page is deleted
                 type: 'DELETE_IMAGE',
                 payload: {
-                    isFavorited: isFavorited
+                    isFavorited: isFavorited,
+                    isReported: false
                 }
             }) // maybe we could shift the redux inbox here so it's updated right when history is pushed. It would redundantly reload but that might not be a problem
             if (!isFavorited) {
@@ -45,6 +45,13 @@ function ViewInbox (props) {
                     payload: 'false'  //these are all strings because firebase storage metadata can't do booleans
                 })
             }
+
+            // not reported, so update vibe record to indicate this
+            await database().ref('users/' + props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].from + '/vibeRecord').update({
+                firstVibe: 0,
+                lastVibeReported: 0
+            })
+
             props.history.push('/camera')
         // } else {
         //     console.log('ad is not loaded yet')
@@ -88,29 +95,62 @@ function ViewInbox (props) {
     }
 
     report = async () => {
+        // do this either here or the deleteImageSaga, but not both. probably here
         console.log('in report function')
-        
-        //ban user && set unban time
-        let banDays = Math.floor(Math.random() * 45) + 1
-        console.log('banDays:', banDays)
-        let banMilliSeconds = 86400000 * banDays
-        console.log('banMilliSeconds:', banMilliSeconds)
-        let time = new Date().getTime()
-        console.log('time:', time)
-        let unbanTime = time + banMilliSeconds
-        console.log('unbanTime:', unbanTime)
 
-        let unbanTimeRef = 'users/' + props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].from + '/unbanTime';
-        console.log('unbanTimeRef:', unbanTimeRef)
-        await database() //this could maybe be done in one database call
-            .ref(unbanTimeRef)
-            .set(unbanTime)
+        //record report && determine if sender should be banned
+        const vibeRecordRef = 'users/' + props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].from + '/vibeRecord'
+        const snapshot = await database()
+            .ref(vibeRecordRef)
+            .once('value')
+        console.log('snapshot:', snapshot)
+        let vibeRecord = await snapshot.val()
+        console.log('vibeRecord:', vibeRecord)
+
+        // if firstVibe, ban
+        // if lastVibeReported, ban
+        // if third strike, ban
+        // if none of the above, add a strike
+        if (vibeRecord.firstVibe === 1 || vibeRecord.lastVibeReported === 1 || vibeRecord.strikes + 1 % 3 === 0) {
+            //ban user && set unban time
+            //randomly decide ban time between 1 and 45 days
+
+
+            //this block is not being triggered properly
+            let banDays = Math.floor(Math.random() * 45) + 1
+            console.log('banDays:', banDays)
+            let banMilliSeconds = 86400000 * banDays
+            console.log('banMilliSeconds:', banMilliSeconds)
+            let time = new Date().getTime()
+            console.log('time:', time)
+            let unbanTime = time + banMilliSeconds
+            console.log('unbanTime:', unbanTime)
+
+            let unbanTimeRef = 'users/' + props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].from + '/unbanTime';
+            console.log('unbanTimeRef:', unbanTimeRef)
+            await database() //this could maybe be done in one database call
+                .ref(unbanTimeRef)
+                .set(unbanTime)
+            
+        } else {
+
+        }
+        // add a strike whether banned or not
+        await database()
+            .ref(vibeRecordRef)
+            .update({
+                strikes: vibeRecord.strikes + 1
+            })
+
+        
+        
 
         //delete photo from Redux
         props.dispatch({    //dispatch is async- if it responds before the page is changed, there will be an error because the background of the page is deleted
             type: 'DELETE_IMAGE',
             payload: {
-                isFavorited: isFavorited
+                isFavorited: isFavorited,
+                isReported: true
             }
         })
         props.dispatch({

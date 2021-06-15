@@ -37,6 +37,7 @@ const CameraPage = props => {
     const [isSending, setIsSending] = useState(false)
     const [isInboxLoading, setIsInboxLoading] = useState(false)
     const [isAdLoaded, setIsAdLoaded] = useState(false)
+    const [isLeftHandedMode, setIsLeftHandedMode] = useState(false)
     const cameraRef = useRef(null)
 
     logout = () => {
@@ -221,9 +222,17 @@ const CameraPage = props => {
     //     }
     // }, [isAdLoaded])
 
+    // useEffect(() => {
+    //     console.log('Mounted')
+    // }, [])
+
     useEffect(() => {
-        console.log('Mounted')
-    }, [])
+        console.log('userData triggered')
+        console.log('props.reduxState.userData.settings:', props.reduxState.userData.settings)
+        if (props.reduxState.userData.settings) {
+            setIsLeftHandedMode(props.reduxState.userData.settings.leftHandedMode)
+        }
+    }, [props.reduxState.userData])
 
     useEffect(() => {
         const eventListener = rewarded.onAdEvent((type, error, reward) => {
@@ -302,12 +311,12 @@ const CameraPage = props => {
                         </View>
                         {props.reduxState.respondingTo ?
                             <View style={{
-                                flexDirection: props.reduxState.userData.settings.leftHandedMode ? 'row-reverse' : 'row',
+                                flexDirection: isLeftHandedMode ? 'row-reverse' : 'row',
                                 justifyContent: 'space-between',
                                 alignItems: 'center'
                             }}>
                                 <View style={{
-                                    alignItems: props.reduxState.userData && props.reduxState.userData.settings.leftHandedMode ? 'flex-start' : 'flex-end',
+                                    alignItems: isLeftHandedMode ? 'flex-start' : 'flex-end',
                                     paddingRight: 3,
                                     paddingLeft: 3,
                                     opacity: 0
@@ -340,7 +349,7 @@ const CameraPage = props => {
                         :
                             <View style={styles.bottomIcons}>
                                 <View style={{
-                                    alignItems: props.reduxState.userData && props.reduxState.userData.settings.leftHandedMode ? 'flex-start' : 'flex-end',
+                                    alignItems: isLeftHandedMode ? 'flex-start' : 'flex-end',
                                     marginBottom: 2,
                                     paddingRight: 3,
                                     paddingLeft: 3
