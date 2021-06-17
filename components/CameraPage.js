@@ -6,10 +6,10 @@ import { RNCamera } from 'react-native-camera';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AsyncStorage from '@react-native-community/async-storage';
 
 import storage from '@react-native-firebase/storage';
 import messaging from '@react-native-firebase/messaging';
+import database from '@react-native-firebase/database';
 import { RewardedAd, RewardedAdEventType, TestIds } from '@react-native-firebase/admob';
 
 import Logout from './Logout';
@@ -107,40 +107,70 @@ const CameraPage = props => {
         }
     }
 
+    checkIfBanned = async (uid) => {
+        console.log('in checkIfBanned. uid:', uid)
+        return await database()
+            .ref(`/users/${uid}/unbanTime`)
+            .once('value')
+            .then(snapshot => {
+                const unbanTime = snapshot.val()
+                const currentTime = new Date().getTime()
+                console.log('unbanTime:', unbanTime)
+                if (currentTime < unbanTime) {
+                    console.log('user is banned')
+                    return true
+                } else {
+                    console.log('user is not banned')
+                    return false
+                }
+            })
+    }
+
     sendImage = async () => {
         console.log('props.reduxState.userID found.', props.reduxState.userID)
-
-        // generate filename from current time in milliseconds
-        let filename = new Date().getTime();
-        console.log('filename:', filename)
-        const ref = storage().ref('images/' + String(filename));
-        const metadata = {
-            customMetadata: {
-                fromUid: props.reduxState.userID,
-                toUid: props.reduxState.respondingTo,
-                didTheyFavorite: props.reduxState.didTheyFavorite
+        if (await checkIfBanned(props.reduxState.userID)) {
+            console.log('user is banned, so logging out')
+            props.dispatch({
+                type: 'SET_LOGIN_MESSAGE',
+                payload: 'You were signed out because you have been temporarily banned for spreading bad vibes.'
+            })
+            logout()
+        } else {
+            console.log('user is not banned, so proceding with send')
+            // generate filename from current time in milliseconds
+            let filename = new Date().getTime();
+            console.log('filename:', filename)
+            const ref = storage().ref('images/' + String(filename));
+            const metadata = {
+                customMetadata: {
+                    fromUid: props.reduxState.userID,
+                    toUid: props.reduxState.respondingTo,
+                    didTheyFavorite: props.reduxState.didTheyFavorite
+                }
             }
+            await ref.putFile(capturedImageUri, metadata);
+            
+            console.log('props.reduxState.respondingTo:', props.reduxState.respondingTo)
+            props.dispatch({  // image is sent, therefore not responding anymore 
+                type: 'SET_NOT_RESPONDING'
+            })
+            props.dispatch({  // if they favorite, this well be set back to false
+                type: 'SET_DID_THEY_FAVORITE',
+                payload: 'false'
+            })
+
+
+
+            //show ad here
+            //rewarded.show()
+
+
+
+            toggleReviewMode()
+            setIsSending(false)
         }
-        await ref.putFile(capturedImageUri, metadata);
+
         
-        console.log('props.reduxState.respondingTo:', props.reduxState.respondingTo)
-        props.dispatch({  // image is sent, therefore not responding anymore 
-            type: 'SET_NOT_RESPONDING'
-        })
-        props.dispatch({  // if they favorite, this well be set back to false
-            type: 'SET_DID_THEY_FAVORITE',
-            payload: 'false'
-        })
-
-
-
-        //show ad here
-        //rewarded.show()
-
-
-
-        toggleReviewMode()
-        setIsSending(false)
 
 
     }
@@ -156,7 +186,7 @@ const CameraPage = props => {
                 type: 'GET_USER_DATA'
             })
             setIsInboxLoading(false)
-            console.log('already done')
+            console.log('checked inbox')
         }
     }
 

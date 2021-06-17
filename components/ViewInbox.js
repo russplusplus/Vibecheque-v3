@@ -107,6 +107,12 @@ function ViewInbox (props) {
         let vibeRecord = await snapshot.val()
         console.log('vibeRecord:', vibeRecord)
 
+        console.log('firstVibe check:', vibeRecord.firstVibe === 1)
+        console.log('lastVibeReported check:', vibeRecord.lastVibeReported === 1)
+        console.log('strikes check:', vibeRecord.strikes + 1 % 3 === 0)
+        console.log('strikes plus one:', vibeRecord.strikes + 1)
+        console.log('strikes plus one remainder:', vibeRecord.strikes + 1 % 3)
+
         // if firstVibe, ban
         // if lastVibeReported, ban
         // if third strike, ban
@@ -131,6 +137,13 @@ function ViewInbox (props) {
             await database() //this could maybe be done in one database call
                 .ref(unbanTimeRef)
                 .set(unbanTime)
+            await database()
+                .ref(vibeRecordRef)
+                .update({
+                    numberOfTimesBanned: vibeRecord.numberOfTimesBanned + 1,
+                    lastVibeReported: 1,
+                    // isBanned: 1
+                })
             
         } else {
 
@@ -139,7 +152,8 @@ function ViewInbox (props) {
         await database()
             .ref(vibeRecordRef)
             .update({
-                strikes: vibeRecord.strikes + 1
+                strikes: vibeRecord.strikes + 1,
+                // isBanned: 0
             })
 
         

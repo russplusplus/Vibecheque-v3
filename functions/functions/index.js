@@ -19,12 +19,12 @@ exports.addUser = functions.auth.user().onCreate(user => {
         leftHandedMode: false
       },
       vibeRecord: {
-        isBanned: 0,
+        // isBanned: 0,
         strikes: 0,
         lastVibeReported: 0,
-        firstVibe: 1
+        firstVibe: 1,
+        numberOfTimesBanned: 0
       },
-      // typeofUid: typeofUid,
     });
 });
 
@@ -76,6 +76,14 @@ exports.addImage = functions.storage.object('/images').onFinalize(async (object)
         url: url,
         didTheyFavorite: object.metadata.didTheyFavorite
       })
+
+    // // update vibe record of sender to indicate they successfully sent a vibe and are therefore not banned
+    // admin
+    //   .database()
+    //   .ref(`users/${senderUid}/vibeRecord`)
+    //   .update({
+    //     isBanned: 0
+    //   })
 
     // send FCM
     let recipientToken = users[recipientUid].registrationToken
