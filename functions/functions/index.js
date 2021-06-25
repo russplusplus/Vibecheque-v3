@@ -5,8 +5,8 @@ const {Storage} = require('@google-cloud/storage');
 const gcs = new Storage({keyFilename: './service-account.json'});
 
 exports.addUser = functions.auth.user().onCreate(user => {
-  console.log(user)
-  admin
+  console.log('user:', user)
+    admin
     .database()
     .ref(`users/${user.uid}`)
     .set({
@@ -14,11 +14,18 @@ exports.addUser = functions.auth.user().onCreate(user => {
       email: user.email,
       phoneNumber: user.phoneNumber,
       settings: {
-        location: false,
-        distance: 500,
+        // location: false,
+        // distance: 500,
         leftHandedMode: false
-      }
-  });
+      },
+      vibeRecord: {
+        // isBanned: 0,
+        strikes: 0,
+        lastVibeReported: 0,
+        firstVibe: 1,
+        numberOfTimesBanned: 0
+      },
+    });
 });
 
 exports.addImage = functions.storage.object('/images').onFinalize(async (object) => {
@@ -69,6 +76,14 @@ exports.addImage = functions.storage.object('/images').onFinalize(async (object)
         url: url,
         didTheyFavorite: object.metadata.didTheyFavorite
       })
+
+    // // update vibe record of sender to indicate they successfully sent a vibe and are therefore not banned
+    // admin
+    //   .database()
+    //   .ref(`users/${senderUid}/vibeRecord`)
+    //   .update({
+    //     isBanned: 0
+    //   })
 
     // send FCM
     let recipientToken = users[recipientUid].registrationToken

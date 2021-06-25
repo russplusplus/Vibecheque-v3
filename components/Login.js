@@ -123,9 +123,10 @@ const Login = props => {
     }
 
     updateRegistrationToken = async (uid) => {
+        console.log('in login updateRegistrationToken. uid:', uid)
         let registrationToken = await messaging().getToken()
         await database()
-            .ref(`/users/${uid}`)
+            .ref(`/users/${uid}`)  // for some reason, this writes to /users/undefined
             .update({
                 registrationToken: registrationToken
             })

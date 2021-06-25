@@ -10,18 +10,24 @@ function* getUserData() {
     let uid = reduxState.userID
 
     const ref = `users/${uid}`
-    const snapshot = yield database()
-        .ref(ref)
-        .once('value')
-    console.log('in getUserData. snapshot.val():', snapshot.val())
-    yield put({
-        type: 'SET_USER_DATA',
-        payload: snapshot.val()
-    })
-    yield put({
-        type: 'SET_NEW_SETTINGS',
-        payload: snapshot.val().settings
-    })
+    
+    try {
+        const snapshot = yield database()
+            .ref(ref)
+            .once('value')
+        console.log('in getUserData. snapshot.val():', snapshot.val())
+        yield put({
+            type: 'SET_USER_DATA',
+            payload: snapshot.val()
+        })
+        yield put({
+            type: 'SET_NEW_SETTINGS',
+            payload: snapshot.val().settings
+        })
+    } catch(err) {
+        console.log(err)
+    }
+    
 }
 
 function* getUserDataSaga() {
