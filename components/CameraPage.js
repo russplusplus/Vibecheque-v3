@@ -132,7 +132,7 @@ const CameraPage = props => {
             console.log('user is banned, so logging out')
             props.dispatch({
                 type: 'SET_LOGIN_MESSAGE',
-                payload: 'You were signed out because you have been temporarily banned for spreading bad vibes.'
+                payload: 'You have been temporarily banned for spreading bad vibes.'
             })
             logout()
         } else {

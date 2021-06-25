@@ -109,21 +109,31 @@ function ViewInbox (props) {
 
         console.log('firstVibe check:', vibeRecord.firstVibe === 1)
         console.log('lastVibeReported check:', vibeRecord.lastVibeReported === 1)
-        console.log('strikes check:', vibeRecord.strikes + 1 % 3 === 0)
+        console.log('strikes check:', (vibeRecord.strikes + 1) % 3 === 0)
         console.log('strikes plus one:', vibeRecord.strikes + 1)
-        console.log('strikes plus one remainder:', vibeRecord.strikes + 1 % 3)
+        console.log('strikes plus one remainder:', (vibeRecord.strikes + 1) % 3)
+        console.log('3 % 3:', 3 % 3)
 
         // if firstVibe, ban
         // if lastVibeReported, ban
         // if third strike, ban
         // if none of the above, add a strike
-        if (vibeRecord.firstVibe === 1 || vibeRecord.lastVibeReported === 1 || vibeRecord.strikes + 1 % 3 === 0) {
+        if (vibeRecord.firstVibe === 1 || vibeRecord.lastVibeReported === 1 || (vibeRecord.strikes + 1) % 3 === 0) {
             //ban user && set unban time
             //randomly decide ban time between 1 and 45 days
 
 
             //this block is not being triggered properly
-            let banDays = Math.floor(Math.random() * 45) + 1
+            let banDays
+            if (vibeRecord.numberOfTimesBanned === 0) {
+                banDays = Math.floor(Math.random() * 45) + 1
+            } else if (vibeRecord.numberOfTimesBanned === 1) {
+                banDays = 2 * (Math.floor(Math.random() * 45) + 1)
+            } else if (vibeRecord.numberOfTimesBanned === 2) {
+                banDays = 3 * (Math.floor(Math.random() * 45) + 1)
+            } else if (vibeRecord.numberOfTimesBanned === 2) {
+                banDays = 1000000
+            }
             console.log('banDays:', banDays)
             let banMilliSeconds = 86400000 * banDays
             console.log('banMilliSeconds:', banMilliSeconds)
