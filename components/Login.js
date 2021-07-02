@@ -50,20 +50,22 @@ const Login = props => {
         console.log('in sendCode function. phoneNumber:', phoneNumber);
         const fullPhoneNumber = '+' + phoneInput.current?.getCallingCode() + phoneNumber
         console.log('fullPhoneNumber:', fullPhoneNumber)
+        console.log('isValidNumber:', phoneInput.curent?.isValidNumber)
         if (!phoneNumber) {
+        //if (!phoneInput.isValidNumber) { //uncomment when deploying
             setMessage('Please enter a valid phone number to proceed.')
-            return
+        } else {
+            setIsLoginLoading(true)
+            try {   
+                const confirmation = await auth().signInWithPhoneNumber(fullPhoneNumber);
+                setConfirm(confirmation);
+                setMessage('')
+            } catch (error) {
+                console.log('Error. Text not sent.', error)
+                setMessage('Invalid phone number.')
+            }
+            setIsLoginLoading(false);
         }
-        setIsLoginLoading(true)
-        try {   
-            const confirmation = await auth().signInWithPhoneNumber(fullPhoneNumber);
-            setConfirm(confirmation);
-            setMessage('')
-        } catch (error) {
-            console.log('Error. Text not sent.', error)
-            setMessage('Invalid phone number.')
-        }
-        setIsLoginLoading(false);
     }
 
     confirmCode = async () => {
@@ -132,6 +134,27 @@ const Login = props => {
             })
     }
 
+    addDashes = (n) => {
+        if (n.length < 4) {
+            return n
+        } else if (n.length < 7) {
+            return n.slice(0,3) + '-' + n.slice(3,6)
+        } else {
+            return n.slice(0,3) + '-' + n.slice(3,6) + '-' + n.slice(6,15)
+        }
+    }
+
+    removeDashes = (n) => {
+        //console.log('n:', n)
+        if (n.includes('-')) {
+            const newN = n.replace('-', '')
+            return removeDashes(newN)
+        } else {
+            //console.log('n without dashes:', n.replace('-', ''))
+            return n
+        }
+    }
+
     back = () => {
         setMessage('')
         setIsLoginLoading(false)
@@ -147,28 +170,28 @@ const Login = props => {
 
         
 
-        try {
-            console.log('code is valid! user:', user)
-            let isBanned = await checkIfBanned(uid)
-            console.log('isBanned:', isBanned)
-            console.log('typeof isBanned:', typeof(isBanned))
-            if (!isBanned) {
-                updateRegistrationToken(user)
-                await AsyncStorage.setItem("user", JSON.stringify(user))
-                setMessage('')
-                props.history.push('/camera')
-            } else {
+            try {
+                console.log('code is valid! user:', user)
+                let isBanned = await checkIfBanned(uid)
+                console.log('isBanned:', isBanned)
+                console.log('typeof isBanned:', typeof(isBanned))
+                if (!isBanned) {
+                    updateRegistrationToken(user)
+                    await AsyncStorage.setItem("user", JSON.stringify(user))
+                    setMessage('')
+                    props.history.push('/camera')
+                } else {
+                    setIsLoginLoading(false)
+                    setMessage('You have been temporarily banned for spreading bad vibes. Try again later.')
+                }
+                
+                
+            } catch (error) {
                 setIsLoginLoading(false)
-                setMessage('You have been temporarily banned for spreading bad vibes. Try again later.')
+                console.log('Invalid code.')
+                console.log('error:', error)
+                setMessage('Invalid code.')
             }
-            
-            
-        } catch (error) {
-            setIsLoginLoading(false)
-            console.log('Invalid code.')
-            console.log('error:', error)
-            setMessage('Invalid code.')
-        }
 
         }
 
@@ -206,7 +229,12 @@ const Login = props => {
             <>    
                 <PhoneInput
                     ref={phoneInput}
-                    onChangeText={text => setPhoneNumber(text)}
+                    value={addDashes(phoneNumber)} // value prop actually does work!
+                    onChangeText={text => {
+                        // console.log('text:', text)
+                        // console.log('removeDashes(text):', removeDashes(text))
+                        setPhoneNumber(removeDashes(text))
+                    }} // tried to limit digit count here, but this component does not receive a 'value' prop, so didn't work
                     defaultCode={"US"}
                     placeholder={"1-800-your-mom"}
                     containerStyle={styles.phoneInput}
@@ -260,19 +288,19 @@ const Login = props => {
                         </Text>
                     }
                 </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => back()}
+                    style={styles.backButton}>
+                    <Text
+                        style={{
+                            fontSize: 20,
+                            fontFamily: 'Rubik-Regular'
+                        }}>
+                        Back
+                    </Text>
+                </TouchableOpacity>
             </>
             }
-            <TouchableOpacity
-                onPress={() => back()}
-                style={styles.backButton}>
-                <Text
-                    style={{
-                        fontSize: 20,
-                        fontFamily: 'Rubik-Regular'
-                    }}>
-                    Back
-                </Text>
-            </TouchableOpacity>
             </View>
         </View>
     )
