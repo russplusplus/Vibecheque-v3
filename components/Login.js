@@ -127,6 +127,7 @@ const Login = props => {
     updateRegistrationToken = async (uid) => {
         console.log('in login updateRegistrationToken. uid:', uid)
         let registrationToken = await messaging().getToken()
+        console.log('registrationToken:', registrationToken)
         await database()
             .ref(`/users/${uid}`)  // for some reason, this writes to /users/undefined
             .update({
@@ -162,42 +163,34 @@ const Login = props => {
     }
 
     // this needs work
-    async function onAuthStateChanged(user) {
-        console.log('in onAuthStateChanged. user:', user)
-        const uid = user.user.uid
-
-        if (user) {
-
-        
-
-            try {
-                console.log('code is valid! user:', user)
-                let isBanned = await checkIfBanned(uid)
-                console.log('isBanned:', isBanned)
-                console.log('typeof isBanned:', typeof(isBanned))
-                if (!isBanned) {
-                    updateRegistrationToken(user)
-                    await AsyncStorage.setItem("user", JSON.stringify(user))
-                    setMessage('')
-                    props.history.push('/camera')
-                } else {
-                    setIsLoginLoading(false)
-                    setMessage('You have been temporarily banned for spreading bad vibes. Try again later.')
-                }
-                
-                
-            } catch (error) {
-                setIsLoginLoading(false)
-                console.log('Invalid code.')
-                console.log('error:', error)
-                setMessage('Invalid code.')
-            }
-
-        }
-
-        checkIfLoggedIn()
-        console.log('user:', user);
-    }
+    // async function onAuthStateChanged(user) {
+    //     console.log('in onAuthStateChanged. user:', user)
+    //     const uid = user.user.uid
+    //     if (user) {
+    //         try {
+    //             console.log('code is valid! user:', user)
+    //             let isBanned = await checkIfBanned(uid)
+    //             console.log('isBanned:', isBanned)
+    //             console.log('typeof isBanned:', typeof(isBanned))
+    //             if (!isBanned) {
+    //                 updateRegistrationToken(user)
+    //                 await AsyncStorage.setItem("user", JSON.stringify(user))
+    //                 setMessage('')
+    //                 props.history.push('/camera')
+    //             } else {
+    //                 setIsLoginLoading(false)
+    //                 setMessage('You have been temporarily banned for spreading bad vibes. Try again later.')
+    //             }
+    //         } catch (error) {
+    //             setIsLoginLoading(false)
+    //             console.log('Invalid code.')
+    //             console.log('error:', error)
+    //             setMessage('Invalid code.')
+    //         }
+    //     }
+    //     checkIfLoggedIn()
+    //     console.log('user:', user);
+    // }
     
     //   useEffect(() => {
     //     const subscriber = auth().onAuthStateChanged((user) => {

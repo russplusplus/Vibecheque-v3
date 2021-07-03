@@ -51,7 +51,7 @@ export default App = () => {
 
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('Received FCM')
+      console.log('Received FCM ', remoteMessage)
       setNotification(true)
     });
     return unsubscribe;

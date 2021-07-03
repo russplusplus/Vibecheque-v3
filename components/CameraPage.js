@@ -212,6 +212,9 @@ const CameraPage = props => {
 
         if (enabled) {
             console.log('Authorization status:', authStatus);
+            // 0 = denied
+            // 1 = authorized
+            // 2 = provisional
         }
     }
 
