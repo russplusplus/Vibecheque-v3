@@ -249,11 +249,11 @@ const CameraPage = props => {
         console.log('isSending triggered.', isSending)
     }, [isSending])
 
-    // useEffect(() => {
-    //     if (isSending) {
-    //         rewarded.show()
-    //     }
-    // }, [isAdLoaded])
+    useEffect(() => {
+        if (isSending) {
+            rewarded.show()
+        }
+    }, [isAdLoaded])
 
     // useEffect(() => {
     //     console.log('Mounted')
