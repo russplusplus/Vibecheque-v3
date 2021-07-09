@@ -8,6 +8,7 @@ import PhoneInput from 'react-native-phone-number-input';
 import messaging from '@react-native-firebase/messaging';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 import colors from '../assets/colors';
 
@@ -62,7 +63,8 @@ const Login = props => {
                 setMessage('')
             } catch (error) {
                 console.log('Error. Text not sent.', error)
-                setMessage('Invalid phone number.')
+                crashlytics().recordError(error)
+                setMessage(error.slice(0,20))
             }
             setIsLoginLoading(false);
         }
@@ -207,6 +209,8 @@ const Login = props => {
 
 
     useEffect(() =>  {
+        crashlytics().log('Test log from Login page')
+        // crashlytics().crash()
         checkIfLoggedIn()
     }, [])
 
@@ -222,10 +226,11 @@ const Login = props => {
             <>    
                 <PhoneInput
                     ref={phoneInput}
-                    value={addDashes(phoneNumber)} // value prop actually does work!
+                    // value={addDashes(phoneNumber)} // value prop actually does work!
                     onChangeText={text => {
-                        // console.log('text:', text)
-                        // console.log('removeDashes(text):', removeDashes(text))
+                        console.log('text:', text)
+                        console.log('addDashes(text):', addDashes(text))
+                        console.log('removeDashes(text):', removeDashes(text))
                         setPhoneNumber(removeDashes(text))
                     }} // tried to limit digit count here, but this component does not receive a 'value' prop, so didn't work
                     defaultCode={"US"}
@@ -249,7 +254,7 @@ const Login = props => {
                                 fontSize: 20,
                                 fontFamily: 'Rubik-Regular'
                             }}>
-                            Send Code
+                            Sign in
                         </Text>
                     }
                 </TouchableOpacity>
@@ -277,7 +282,7 @@ const Login = props => {
                                 fontSize: 20,
                                 fontFamily: 'Rubik-Regular'
                             }}>
-                            Login
+                            Sign in
                         </Text>
                     }
                 </TouchableOpacity>
