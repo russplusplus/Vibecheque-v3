@@ -227,7 +227,7 @@ const Login = props => {
                 <PhoneInput
                     ref={phoneInput}
                     // value={addDashes(phoneNumber)} // value prop actually does work!
-                    textInputProps={{  // this way worked when 
+                    textInputProps={{  // this way worked when the above way stopped working
                         value: addDashes(phoneNumber)
                     }}
                     onChangeText={text => {
