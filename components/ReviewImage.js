@@ -8,9 +8,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 ReviewImage = props => {
         return (
             <Modal isVisible={props.visible} animationInTiming={0.1} animationOutTiming={0.1} style={styles.modal}>
-                <ImageBackground
+                {/* <ImageBackground
                     style={{ flex: 1 }}
-                    source={{ uri: props.capturedImageUri }}>
+                    source={{ uri: props.capturedImageUri }}> */}
+                <View style={{ flex: 1, backgroundColor: 'black'}}>
                     <View style={styles.iconContainer}>
                         <View style={styles.bottomIcons}>
                             <TouchableOpacity onPress={props.toggleReviewMode} style={styles.cancel}>
@@ -35,7 +36,8 @@ ReviewImage = props => {
                             </TouchableOpacity>
                         </View>
                     </View>
-                </ImageBackground> 
+                </View>
+                {/* </ImageBackground>  */}
             </Modal>
         )
 }

@@ -231,9 +231,9 @@ const Login = props => {
                         value: addDashes(phoneNumber)
                     }}
                     onChangeText={text => {
-                        console.log('text:', text)
-                        console.log('addDashes(text):', addDashes(text))
-                        console.log('removeDashes(text):', removeDashes(text))
+                        // console.log('text:', text)
+                        // console.log('addDashes(text):', addDashes(text))
+                        // console.log('removeDashes(text):', removeDashes(text))
                         setPhoneNumber(removeDashes(text))
                     }} // tried to limit digit count here, but this component does not receive a 'value' prop, so didn't work
                     defaultCode={"US"}

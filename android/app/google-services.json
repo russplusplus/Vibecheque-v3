@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "973891374140-5a0848cqnb1ni6nu8658akt8g478mrnp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vibecheque",
+            "certificate_hash": "491f15d160d2365fba26cb660396243861c25c84"
+          }
+        },
+        {
           "client_id": "973891374140-p5cvclro2jrstnmp3dcun0rcgq6c2a29.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
