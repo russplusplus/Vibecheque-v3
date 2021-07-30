@@ -237,7 +237,7 @@ const Login = props => {
                         setPhoneNumber(removeDashes(text))
                     }} // tried to limit digit count here, but this component does not receive a 'value' prop, so didn't work
                     defaultCode={"US"}
-                    placeholder={"1-800-your-mom"}
+                    placeholder={"000-000-0000"}
                     containerStyle={styles.phoneInput}
                     layout='second'
                     autoFocus
