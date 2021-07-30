@@ -10,7 +10,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import storage from '@react-native-firebase/storage';
 import messaging from '@react-native-firebase/messaging';
 import database from '@react-native-firebase/database';
-import { RewardedAd, RewardedAdEventType, TestIds } from '@react-native-firebase/admob';
+import admob, { RewardedAd, RewardedAdEventType, TestIds, MaxAdContentRating } from '@react-native-firebase/admob';
 
 import Logout from './Logout';
 import ReviewImage from './ReviewImage';
@@ -25,6 +25,22 @@ Ionicons.loadFont()
 const platformSpecificAdUnitId = Platform.OS === 'ios' ? 'ca-app-pub-9408101332805838~7599720393' : 'ca-app-pub-9408101332805838~8001662185'
 const adUnitId = __DEV__ ? TestIds.REWARDED : platformSpecificAdUnitId;
 const rewarded = RewardedAd.createForAdRequest(adUnitId);
+
+admob()
+  .setRequestConfiguration({
+    // Update all future requests suitable for parental guidance
+    maxAdContentRating: MaxAdContentRating.PG,
+
+    // Indicates that you want your content treated as child-directed for purposes of COPPA.
+    tagForChildDirectedTreatment: true,
+
+    // Indicates that you want the ad request to be handled in a
+    // manner suitable for users under the age of consent.
+    tagForUnderAgeOfConsent: true,
+  })
+  .then(() => {
+    // Request config successfully set!
+  });
 
 const CameraPage = props => {
 
