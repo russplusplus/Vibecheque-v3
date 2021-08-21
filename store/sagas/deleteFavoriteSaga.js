@@ -7,7 +7,7 @@ function* deleteFavorite() {
     console.log('in deleteFavorite. userID:', reduxState.userID)
 
     // delete from database
-    yield database().ref(`users/${reduxState.userID}/favorite`).remove();
+    yield database().ref(`users/${reduxState.userID}/data/favorite`).remove();
 
     // delete from storage
     yield storage().ref(`images/${reduxState.userData.favorite.name}`).delete();
