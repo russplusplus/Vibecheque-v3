@@ -254,7 +254,7 @@ const CameraPage = props => {
         console.log('props.reduxState.userData:', props.reduxState.userData)
         //setUid()
         getUserData()
-        props.dispatch({  // updates user's divice registration token in database and adds it to redux
+        props.dispatch({  // updates user's device registration token in database and adds it to redux
             type: 'GET_REGISTRATION_TOKEN'
         })
     
