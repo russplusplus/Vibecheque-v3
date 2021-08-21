@@ -15,14 +15,17 @@ function* getUserData() {
         const snapshot = yield database()
             .ref(ref)
             .once('value')
-        console.log('in getUserData. snapshot.val():', snapshot.val())
+        const user = snapshot.val()
+        console.log('in getUserData. snapshot.val():', user)
         yield put({
             type: 'SET_USER_DATA',
-            payload: snapshot.val()
+            payload: user
         })
+
+        // settings is returning null for new user creation after adding database rules
         yield put({
             type: 'SET_NEW_SETTINGS',
-            payload: snapshot.val().settings
+            payload: user.settings
         })
     } catch(err) {
         console.log(err)

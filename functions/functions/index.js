@@ -6,26 +6,26 @@ const gcs = new Storage({keyFilename: './service-account.json'});
 
 exports.addUser = functions.auth.user().onCreate(user => {
   console.log('user:', user)
-    admin
-    .database()
-    .ref(`users/${user.uid}`)
-    .set({
-      unbanTime: 0,
-      email: user.email,
-      phoneNumber: user.phoneNumber,
-      settings: {
-        // location: false,
-        // distance: 500,
-        leftHandedMode: false
-      },
-      vibeRecord: {
-        // isBanned: 0,
-        strikes: 0,
-        lastVibeReported: 0,
-        firstVibe: 1,
-        numberOfTimesBanned: 0
-      },
-    });
+  admin
+  .database()
+  .ref(`users/${user.uid}`)
+  .set({
+    unbanTime: 0,
+    email: user.email,
+    phoneNumber: user.phoneNumber,
+    settings: {
+      // location: false,
+      // distance: 500,
+      leftHandedMode: false
+    },
+    vibeRecord: {
+      // isBanned: 0,
+      strikes: 0,
+      lastVibeReported: 0,
+      firstVibe: 1,
+      numberOfTimesBanned: 0
+    },
+  });
 });
 
 exports.addImage = functions.storage.object('/images').onFinalize(async (object) => {

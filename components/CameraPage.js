@@ -26,22 +26,6 @@ const platformSpecificAdUnitId = Platform.OS === 'ios' ? 'ca-app-pub-94081013328
 const adUnitId = __DEV__ ? TestIds.REWARDED : platformSpecificAdUnitId;
 const rewarded = RewardedAd.createForAdRequest(adUnitId);
 
-//
-// Try loading ads upon send and creating new "rewarded" 
-// each time to see if the ad runs consistently then.
-// The problem might be that only one ad can run for each 
-// created "rewarded" object.
-// Goodnight
-// Have fun camping this weekend
-// Love, Russ
-//
-
-
-
-
-
-
-
 admob()
   .setRequestConfiguration({
     // Update all future requests suitable for parental guidance
@@ -53,10 +37,10 @@ admob()
     // Indicates that you want the ad request to be handled in a
     // manner suitable for users under the age of consent.
     tagForUnderAgeOfConsent: true,
-  })
+})
   .then(() => {
     // Request config successfully set!
-  });
+});
 
 const CameraPage = props => {
 
@@ -270,7 +254,7 @@ const CameraPage = props => {
         console.log('props.reduxState.userData:', props.reduxState.userData)
         //setUid()
         getUserData()
-        props.dispatch({  // updates user's divice registration token in database
+        props.dispatch({  // updates user's divice registration token in database and adds it to redux
             type: 'GET_REGISTRATION_TOKEN'
         })
     
@@ -322,7 +306,7 @@ const CameraPage = props => {
         return () => {
             eventListener();
         };
-    }, []);
+    });
 
     return (
         <>
