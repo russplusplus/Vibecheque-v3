@@ -6,26 +6,26 @@ const gcs = new Storage({keyFilename: './service-account.json'});
 
 exports.addUser = functions.auth.user().onCreate(user => {
   console.log('user:', user)
-    admin
-    .database()
-    .ref(`users/${user.uid}`)
-    .set({
-      unbanTime: 0,
-      email: user.email,
-      phoneNumber: user.phoneNumber,
-      settings: {
-        // location: false,
-        // distance: 500,
-        leftHandedMode: false
-      },
-      vibeRecord: {
-        // isBanned: 0,
-        strikes: 0,
-        lastVibeReported: 0,
-        firstVibe: 1,
-        numberOfTimesBanned: 0
-      },
-    });
+  admin
+  .database()
+  .ref(`users/${user.uid}/data`)
+  .set({
+    unbanTime: 0,
+    email: user.email,
+    phoneNumber: user.phoneNumber,
+    settings: {
+      // location: false,
+      // distance: 500,
+      leftHandedMode: false
+    },
+    vibeRecord: {
+      // isBanned: 0,
+      strikes: 0,
+      lastVibeReported: 0,
+      firstVibe: 1,
+      numberOfTimesBanned: 0
+    },
+  });
 });
 
 exports.addImage = functions.storage.object('/images').onFinalize(async (object) => {
@@ -44,6 +44,7 @@ exports.addImage = functions.storage.object('/images').onFinalize(async (object)
     let recipientUid = object.metadata.toUid
 
     // send FCM to recipient device registration token
+    // could possibly set up separate users array so entire db doesn't get queried 
     let snapshot = await admin  
       .database()
       .ref('users')
@@ -68,7 +69,7 @@ exports.addImage = functions.storage.object('/images').onFinalize(async (object)
     console.log('senderUid:', senderUid) 
     admin
       .database()
-      .ref(`users/${recipientUid}/inbox/${filename}`)
+      .ref(`users/${recipientUid}/data/inbox/${filename}`)
       .set({
         from: senderUid,
         to: recipientUid,
@@ -158,10 +159,10 @@ exports.addImage = functions.storage.object('/images').onFinalize(async (object)
     // add entry to database
     console.log('recipientUid:', recipientUid)
     console.log('senderUid:', senderUid) 
-    console.log(`ref: users/${recipientUid}/inbox/${filename}`)
+    console.log(`ref: users/${recipientUid}/data/inbox/${filename}`)
     admin
       .database()
-      .ref(`users/${recipientUid}/inbox/${filename}`)
+      .ref(`users/${recipientUid}/data/inbox/${filename}`)
       .set({
         from: senderUid,
         to: recipientUid,

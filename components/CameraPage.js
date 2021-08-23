@@ -37,10 +37,10 @@ admob()
     // Indicates that you want the ad request to be handled in a
     // manner suitable for users under the age of consent.
     tagForUnderAgeOfConsent: true,
-  })
+})
   .then(() => {
     // Request config successfully set!
-  });
+});
 
 const CameraPage = props => {
 
@@ -254,7 +254,7 @@ const CameraPage = props => {
         console.log('props.reduxState.userData:', props.reduxState.userData)
         //setUid()
         getUserData()
-        props.dispatch({  // updates user's divice registration token in database
+        props.dispatch({  // updates user's device registration token in database and adds it to redux
             type: 'GET_REGISTRATION_TOKEN'
         })
     
@@ -306,7 +306,7 @@ const CameraPage = props => {
         return () => {
             eventListener();
         };
-    }, []);
+    });
 
     return (
         <>

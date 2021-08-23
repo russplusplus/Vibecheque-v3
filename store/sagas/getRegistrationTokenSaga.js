@@ -10,13 +10,19 @@ function* getRegistrationToken() {
         payload: registrationToken
     })  
     let user = JSON.parse(yield AsyncStorage.getItem("user"));
-    //Saga user retrieval. user:', user)
+    // Saga user retrieval. 
+    console.log('getRegistrationToken user:', user)
     //console.log('getRegistrationTokenSaga token:', registrationToken)
-    yield database()
+    if (user.uid) {
+        yield database()
         .ref(`/users/${user.uid}`)
         .update({
             registrationToken: registrationToken
         })
+        console.log('registration token successfully updated in database')
+    } else {
+        console.log('uid is undefined, so did not update registration token')
+    }
 }
 
 function* getRegistrationTokenSaga() {

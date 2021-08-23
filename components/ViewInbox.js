@@ -47,7 +47,7 @@ function ViewInbox (props) {
             }
 
             // not reported, so update vibe record to indicate this
-            await database().ref('users/' + props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].from + '/vibeRecord').update({
+            await database().ref('users/' + props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].from + '/data/vibeRecord').update({
                 firstVibe: 0,
                 lastVibeReported: 0
             })

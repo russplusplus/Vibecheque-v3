@@ -14,7 +14,7 @@ function* deleteImage(action) {
     // deleting from Redux is not necessary since redux inbox will get refreshed upon cameraPage load
    
     // delete from database
-    yield database().ref(`users/${reduxState.userID}/inbox/${toBeDeleted}`).remove()
+    yield database().ref(`users/${reduxState.userID}/data/inbox/${toBeDeleted}`).remove()
 
     // get metadata for updating sender vibe record before the image is deleted from storage
     let metadata = yield storage().ref(`images/${toBeDeleted}`).getMetadata()
