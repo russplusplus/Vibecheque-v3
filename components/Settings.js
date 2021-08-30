@@ -93,6 +93,12 @@ Settings = props => {
                         onToggle={(isOn) => toggleLeftHandedMode(isOn)}
                     />
                 </View>
+                <View style={styles.settingRow}>
+                    <TouchableOpacity onPress={() => props.setTutorial1(true)}>
+                        <Text style={styles.setting}>View tutorial</Text>
+                    </TouchableOpacity>
+                    
+                </View>
                 {/* <View style={styles.settingRow}>
                     <Text style={styles.setting}>Location:</Text>
                     <ToggleSwitch

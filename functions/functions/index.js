@@ -119,7 +119,7 @@ exports.addImage = functions.storage.object('/images').onFinalize(async (object)
     let uidArr = []
     for (user in users) {
       //console.log('user:', user)
-      if (users[user].unbanTime < new Date().getTime() && user != senderUid) {   // add [if in geographic radius...]
+      if (users[user].data.unbanTime < new Date().getTime() && user != senderUid) {   // add [if in geographic radius...]
         console.log('user', user, 'is a suitable recipient')
         //console.log('senderUid:', senderUid)
         uidArr.push(user)

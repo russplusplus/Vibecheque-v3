@@ -61,7 +61,7 @@ DeleteFavorite = props => {
                     }}>
                     <Text
                         style={{
-                            fontSize: 26,
+                            fontSize: 20,
                             textAlign: 'center',
                             fontFamily: 'Rubik-Regular'
                         }}>
@@ -82,7 +82,7 @@ DeleteFavorite = props => {
                     }}>
                     <Text
                         style={{
-                            fontSize: 26,
+                            fontSize: 20,
                             textAlign: 'center',
                             fontFamily: 'Rubik-Regular'
                         }}>
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     yesButtonText: {
-        fontSize: 26,
+        fontSize: 20,
         fontFamily: 'Rubik-Regular'
     },
     cancelButton: { 

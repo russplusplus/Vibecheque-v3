@@ -13,7 +13,7 @@ function* login(action) {
         console.log('user:', user)
         let time = new Date().getTime()
         let unbanTime = yield database()
-            .ref(`/users/${user.uid}/unbanTime`)
+            .ref(`/users/${user.uid}/data/unbanTime`)
             .once('value')
             .then(snapshot => {
                 let unbanTime = snapshot.val()

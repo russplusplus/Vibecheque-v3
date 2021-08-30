@@ -47,10 +47,12 @@ function ViewInbox (props) {
             }
 
             // not reported, so update vibe record to indicate this
-            await database().ref('users/' + props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].from + '/data/vibeRecord').update({
-                firstVibe: 0,
-                lastVibeReported: 0
-            })
+            await database()
+                .ref('users/' + props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].from + '/data/vibeRecord')
+                .update({
+                    firstVibe: 0,
+                    lastVibeReported: 0
+                })
 
             props.history.push('/camera')
         // } else {
@@ -99,7 +101,7 @@ function ViewInbox (props) {
         console.log('in report function')
 
         //record report && determine if sender should be banned
-        const vibeRecordRef = 'users/' + props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].from + '/vibeRecord'
+        const vibeRecordRef = 'users/' + props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].from + 'data/vibeRecord'
         const snapshot = await database()
             .ref(vibeRecordRef)
             .once('value')
@@ -142,7 +144,7 @@ function ViewInbox (props) {
             let unbanTime = time + banMilliSeconds
             console.log('unbanTime:', unbanTime)
 
-            let unbanTimeRef = 'users/' + props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].from + '/unbanTime';
+            let unbanTimeRef = 'users/' + props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].from + '/data/unbanTime';
             console.log('unbanTimeRef:', unbanTimeRef)
             await database() //this could maybe be done in one database call
                 .ref(unbanTimeRef)
@@ -213,6 +215,7 @@ function ViewInbox (props) {
 
     useEffect(() => {
         // Set response message
+        // console.log('inbox:', props.reduxState.userData.inbox)
         if (props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].isResponse) {
             if (props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].didTheyFavorite === 'true') {
                 setResponseMessage('They liked your vibe!')
