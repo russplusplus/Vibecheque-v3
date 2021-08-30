@@ -17,12 +17,6 @@ import ReviewImage from './ReviewImage';
 import NoFavorite from './NoFavorite';
 import Settings from './Settings';
 
-import Tutorial1 from './Tutorial1';
-import Tutorial2 from './Tutorial2';
-import Tutorial3 from './Tutorial3';
-import Tutorial4 from './Tutorial4';
-import Tutorial5 from './Tutorial5';
-
 import colors from '../assets/colors';
 
 FontAwesome.loadFont()
@@ -61,12 +55,6 @@ const CameraPage = props => {
     const [isAdLoaded, setIsAdLoaded] = useState(false)
     const [isLeftHandedMode, setIsLeftHandedMode] = useState(false)
     const cameraRef = useRef(null)
-
-    const [tutorial1, setTutorial1] = useState(false)
-    const [tutorial2, setTutorial2] = useState(false)
-    const [tutorial3, setTutorial3] = useState(false)
-    const [tutorial4, setTutorial4] = useState(false)
-    const [tutorial5, setTutorial5] = useState(false)
 
     logout = () => {
         console.log('in logout function')
@@ -262,38 +250,6 @@ const CameraPage = props => {
         })
     }
 
-    tutorial1to2 = () => {
-        setTutorial1(false)
-        setTutorial2(true)
-    }
-
-    tutorial2to3 = () => {
-        setTutorial2(false)
-        setTutorial3(true)
-    }
-
-    tutorial3to4 = () => {
-        setTutorial3(false)
-        setTutorial4(true)
-    }
-
-    tutorial4to5 = () => {
-        setTutorial4(false)
-        setTutorial5(true)
-    }
-
-    finishTutorial = () => {
-        setTutorial5(false)
-    }
-
-    useEffect(() => {
-        console.log('tutorial1:', tutorial1)
-        console.log('tutorial2:', tutorial2)
-        console.log('tutorial3:', tutorial3)
-        console.log('tutorial4:', tutorial4)
-        console.log('tutorial5:', tutorial5)
-    }, [tutorial1, tutorial2, tutorial3, tutorial4, tutorial5])
-
     useEffect(() => {
         // console.log('props.reduxState.userData:', props.reduxState.userData)
         //setUid()
@@ -366,12 +322,7 @@ const CameraPage = props => {
                 <Logout visible={isLogoutMode} toggleLogoutMode={toggleLogoutMode} logout={logout}/>
                 <ReviewImage visible={isReviewMode} toggleReviewMode={toggleReviewMode} sendImage={handlePressSend} capturedImageUri={capturedImageUri} isSending={isSending}/>
                 <NoFavorite visible={isNoFavoriteMode} toggleNoFavoriteMode={toggleNoFavoriteMode}/>
-                <Settings visible={isSettingsMode} toggleSettingsMode={toggleSettingsMode} setTutorial1={setTutorial1}/>
-                <Tutorial1 visible={tutorial1} next={tutorial1to2}/>
-                <Tutorial2 visible={tutorial2} next={tutorial2to3}/>
-                <Tutorial3 visible={tutorial3} next={tutorial3to4}/>
-                <Tutorial4 visible={tutorial4} next={tutorial4to5}/>
-                <Tutorial5 visible={tutorial5} next={finishTutorial}/>
+                <Settings visible={isSettingsMode} toggleSettingsMode={toggleSettingsMode} setTutorial1={startTutorial}/>
                 <RNCamera
                     ref={cameraRef}
                     style={styles.preview}
