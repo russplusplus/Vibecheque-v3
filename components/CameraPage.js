@@ -322,7 +322,7 @@ const CameraPage = props => {
                 <Logout visible={isLogoutMode} toggleLogoutMode={toggleLogoutMode} logout={logout}/>
                 <ReviewImage visible={isReviewMode} toggleReviewMode={toggleReviewMode} sendImage={handlePressSend} capturedImageUri={capturedImageUri} isSending={isSending}/>
                 <NoFavorite visible={isNoFavoriteMode} toggleNoFavoriteMode={toggleNoFavoriteMode}/>
-                <Settings visible={isSettingsMode} toggleSettingsMode={toggleSettingsMode} setTutorial1={startTutorial}/>
+                <Settings visible={isSettingsMode} toggleSettingsMode={toggleSettingsMode}/>
                 <RNCamera
                     ref={cameraRef}
                     style={styles.preview}

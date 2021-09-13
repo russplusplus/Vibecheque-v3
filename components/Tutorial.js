@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Button, Platform, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Button, Platform, TouchableOpacity, Image } from 'react-native';
 import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
 import colors from '../assets/colors';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 Tutorial = (props) => {
     const [step, setStep] = useState(1)
@@ -20,17 +20,23 @@ Tutorial = (props) => {
                     <View style={styles.container}>
                         <View style={styles.topIcons}>
                             <TouchableOpacity onPress={finish}>
-                                <MaterialIcons
-                                    name='keyboard-return'
-                                    style={styles.logoutIcon}
+                                <Ionicons
+                                    name='md-close'
+                                    style={styles.closeIcon}
                                 />
                             </TouchableOpacity>
                         </View>
-                        <Text style={styles.title}>tutorial1</Text>
+                        <Text style={styles.title}>Step 1</Text>
+                        <Text style={styles.step}>Witness a good vibe</Text>
+                        <Image source={require('../assets/Tutorial1.png')} style={styles.image}/>
                         <TouchableOpacity 
                             onPress={() => setStep(2)} 
-                            style={styles.alrightButton}>
-                            <Text style={styles.alrightButtonText}>Next</Text>
+                            style={styles.nextButton}>
+                            <Text style={styles.nextButtonText}>Next</Text>
+                            <Ionicons
+                                name='arrow-forward-outline'
+                                style={styles.arrowIcon}
+                            />
                         </TouchableOpacity>                    
                     </View>   
                 </Modal>
@@ -41,16 +47,23 @@ Tutorial = (props) => {
                     <View style={styles.container}>
                         <View style={styles.topIcons}>
                             <TouchableOpacity onPress={finish}>
-                                <MaterialIcons
-                                    name='keyboard-return'
-                                    style={styles.logoutIcon}
+                                <Ionicons
+                                    name='md-close'
+                                    style={styles.closeIcon}
                                 />
                             </TouchableOpacity>
                         </View>
-                        <Text style={styles.title}>tutorial2</Text>
+                        <Text style={styles.title}>Step 2</Text>
+                        <Text style={styles.step}>Capture the vibe</Text>
+                        <Image source={require('../assets/Tutorial2.png')} style={styles.image}/>
                         <TouchableOpacity 
                             onPress={() => setStep(3)} 
-                            style={styles.alrightButton}>
+                            style={styles.nextButton}>
+                            <Text style={styles.nextButtonText}>Next</Text>
+                            <Ionicons
+                                name='arrow-forward-outline'
+                                style={styles.arrowIcon}
+                            />
                         </TouchableOpacity>                    
                     </View>   
                 </Modal>
@@ -61,17 +74,24 @@ Tutorial = (props) => {
                     <View style={styles.container}>
                         <View style={styles.topIcons}>
                             <TouchableOpacity onPress={finish}>
-                                <MaterialIcons
-                                    name='keyboard-return'
-                                    style={styles.logoutIcon}
+                                <Ionicons
+                                    name='md-close'
+                                    style={styles.closeIcon}
                                 />
                             </TouchableOpacity>
                         </View>
-                        <Text style={styles.title}>tutorial3</Text>
+                        <Text style={styles.title}>Step 3</Text>
+                        <Text style={styles.step}>Share the vibe with a random user</Text>
+                        <Image source={require('../assets/Tutorial3.png')} style={styles.image}/>
                         <TouchableOpacity 
                             onPress={() => setStep(4)} 
-                            style={styles.alrightButton}>
-                        </TouchableOpacity>                    
+                            style={styles.nextButton}>
+                            <Text style={styles.nextButtonText}>Next</Text>
+                            <Ionicons
+                                name='arrow-forward-outline'
+                                style={styles.arrowIcon}
+                            />
+                        </TouchableOpacity>                     
                     </View>   
                 </Modal>
             )
@@ -81,17 +101,24 @@ Tutorial = (props) => {
                     <View style={styles.container}>
                         <View style={styles.topIcons}>
                             <TouchableOpacity onPress={finish}>
-                                <MaterialIcons
-                                    name='keyboard-return'
-                                    style={styles.logoutIcon}
+                                <Ionicons
+                                    name='md-close'
+                                    style={styles.closeIcon}
                                 />
                             </TouchableOpacity>
                         </View>
-                        <Text style={styles.title}>tutorial4</Text>
+                        <Text style={styles.title}>Step 4</Text>
+                        <Text style={styles.step}>Wait a bit</Text>
+                        <Image source={require('../assets/Tutorial4.png')} style={styles.image}/>
                         <TouchableOpacity 
                             onPress={() => setStep(5)} 
-                            style={styles.alrightButton}>
-                        </TouchableOpacity>                    
+                            style={styles.nextButton}>
+                            <Text style={styles.nextButtonText}>Next</Text>
+                            <Ionicons
+                                name='arrow-forward-outline'
+                                style={styles.arrowIcon}
+                            />
+                        </TouchableOpacity>                     
                     </View>   
                 </Modal>
             )
@@ -101,16 +128,23 @@ Tutorial = (props) => {
                     <View style={styles.container}>
                         <View style={styles.topIcons}>
                             <TouchableOpacity onPress={finish}>
-                                <MaterialIcons
-                                    name='keyboard-return'
-                                    style={styles.logoutIcon}
+                                <Ionicons
+                                    name='md-close'
+                                    style={styles.closeIcon}
                                 />
                             </TouchableOpacity>
                         </View>
-                        <Text style={styles.title}>tutorial5</Text>
+                        <Text style={styles.title}>Step 5</Text>
+                        <Text style={styles.step}>Receive an anonymous vibecheque!</Text>
+                        <Image source={require('../assets/Tutorial5.png')} style={styles.image}/>
                         <TouchableOpacity 
                             onPress={finish} 
-                            style={styles.alrightButton}>
+                            style={styles.nextButton}>
+                            <Text style={styles.nextButtonText}>Next</Text>
+                            <Ionicons
+                                name='arrow-forward-outline'
+                                style={styles.arrowIcon}
+                            />
                         </TouchableOpacity>                    
                     </View>   
                 </Modal>
@@ -138,14 +172,34 @@ const styles = StyleSheet.create({
         borderRadius:10, 
         paddingLeft:'4%', 
         paddingRight: '4%',
-        paddingBottom: '16%'
+        // paddingTop: '4%',
+        // paddingBottom: '16%'
+    },
+    topIcons: {
+        display: 'flex',
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginTop: '4%',
+        marginBottom: 0
     },
     title: {
         fontSize: 36, 
         textAlign: 'center',
-        fontFamily: 'Rubik-Regular'
+        fontFamily: 'Rubik-Regular',
+        marginBottom: 0,
+        marginTop: 0
     },
-    alrightButton: { 
+    step: {
+        fontSize: 20, 
+        textAlign: 'center',
+        fontFamily: 'Rubik-Regular',
+        // marginBottom: '10%',
+        marginTop: '6%'
+    },
+    nextButton: { 
+        flexDirection: 'row',
+        alignItems: 'center',
         width: '75%',
         height: 40,
         borderWidth: 0,
@@ -153,23 +207,42 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: colors.blue,
         justifyContent: 'center',
-        marginTop: '15%'
+        // marginTop: '15%',
+        // borderWidth: 2,
+        marginTop: '6%',
+        marginBottom: '16%'
     },
-    alrightButtonText: {
-        fontSize: 20,
+    nextButtonText: {
+        fontSize: 26,
         textAlign: 'center',
-        fontFamily: 'Rubik-Regular'
-    },
-    topIcons: {
-        display: 'flex',
-        width: '100%',
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        marginTop: '4%'
+        fontFamily: 'Rubik-Regular',
+        marginTop: 0,
     },
     logoutIcon: {
         color: 'black', 
         fontSize: 44
+    },
+    closeIcon: {
+        color: 'black',
+        fontSize: 44,
+    },
+    arrowIcon: {
+        fontSize: 26,
+        paddingLeft: 4
+    },
+    image: {
+        resizeMode: Platform.OS === 'ios' ? 'contain' : 'cover', 
+        // position: 'absolute',
+        // top: '35%',
+        width: '100%',
+        height: '50%',
+        padding: 0,
+        // marginTop: 0,
+        // marginBottom: 0,
+        marginTop: '4%',
+        // borderWidth: 2
+        // height: '18%', // 17% cuts off the q on android and 19% makes the logo wider on android
+        // marginBottom: '5%'
     },
 })
 

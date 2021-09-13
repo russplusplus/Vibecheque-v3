@@ -102,13 +102,20 @@ Settings = props => {
                         onToggle={(isOn) => toggleLeftHandedMode(isOn)}
                     />
                 </View>
-                <View style={styles.tutorialButtonRow}>
+                <View style={styles.settingRow}>
+                    <Text style={styles.setting}>Tutorial:</Text>
                     <TouchableOpacity style={styles.tutorialButton} onPress={() => setIsTutorial1(true)}>
-                        <Text style={styles.tutorialButtonText}>View tutorial</Text>
+                        <Text style={styles.setting}>View</Text>
                         <Ionicons
                             name='arrow-forward-outline'
                             style={styles.arrowIcon}
                         />
+                    </TouchableOpacity>
+                    
+                </View>
+                <View style={styles.aboutButtonRow}>
+                    <TouchableOpacity style={styles.aboutButton} onPress={() => console.log('about')}>
+                        <Text style={styles.aboutButtonText}>About</Text>
                     </TouchableOpacity>
                     
                 </View>
@@ -211,7 +218,7 @@ const styles = StyleSheet.create({
         paddingLeft: 0,
         paddingBottom: 6
     },
-    tutorialButtonRow: {
+    aboutButtonRow: {
         width: '100%',
         //height: 40,
         flexDirection: 'column',
@@ -256,6 +263,17 @@ const styles = StyleSheet.create({
     },
     tutorialButton: {
         flexDirection: 'row',
+        width: '30%',
+        height: 26,
+        borderWidth: 0,
+        borderColor: 'black',
+        borderRadius: 10,
+        backgroundColor: colors.green,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    aboutButton: {
+        flexDirection: 'row',
         width: '60%',
         height: 26,
         borderWidth: 0,
@@ -263,10 +281,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: colors.green,
         justifyContent: 'center',
-        marginTop: 30,
+        // marginTop: 30,
         alignItems: 'center'
     },
-    tutorialButtonText: {
+    aboutButtonText: {
         display: 'flex',
         fontSize: 20,
         textAlign: 'right',
@@ -289,7 +307,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: colors.blue,
         justifyContent: 'center',
-        marginTop: 10,
+        marginTop: 30,
         alignItems: 'center'
     },
     saveButtonText: {
