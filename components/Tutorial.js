@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'Rubik-Regular',
         // marginBottom: '10%',
-        marginTop: '6%'
+        marginTop: '2%'
     },
     nextButton: { 
         flexDirection: 'row',
