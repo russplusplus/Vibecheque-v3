@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Button, Platform, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Modal from 'react-native-modal';
 
 import ToggleSwitch from 'toggle-switch-react-native';
 import Slider from '@react-native-community/slider';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import colors from '../assets/colors';
 import { connect } from 'react-redux';
 import database from '@react-native-firebase/database';
 
+import Tutorial1 from './Tutorial';
+
 Settings = props => {
 
     const [isSaving, setIsSaving] = useState(false)
+    const [isTutorial1, setIsTutorial1] = useState(false)
+
+    finishTutorial = () => {
+        setIsTutorial1(false)
+    }
 
     toggleLeftHandedMode = (val) => {
         console.log('in toggleLeftHandedMode. val:', val)
@@ -36,16 +44,16 @@ Settings = props => {
     //     })
     // }
 
-    changeDistance = (val) => {
-        //console.log('in changeDistance. Math.round(val):', Math.round(val))
-        props.dispatch({
-            type: 'SET_NEW_SETTINGS',
-            payload: {
-                ...props.reduxState.newSettings,
-                distance: val
-            }
-        })
-    }
+    // changeDistance = (val) => {
+    //     //console.log('in changeDistance. Math.round(val):', Math.round(val))
+    //     props.dispatch({
+    //         type: 'SET_NEW_SETTINGS',
+    //         payload: {
+    //             ...props.reduxState.newSettings,
+    //             distance: val
+    //         }
+    //     })
+    // }
 
     saveSettings = async () => {
         console.log('in saveSettings')
@@ -78,6 +86,7 @@ Settings = props => {
 
     return (
         <Modal isVisible={props.visible} animationIn='slideInDown' animationOut='slideOutUp'>
+            <Tutorial1 visible={isTutorial1} finishTutorial={finishTutorial}/>
             <View style={styles.container}>
                 <Text style={styles.title}>Settings</Text>
                 <View style={styles.settingRow}>
@@ -92,6 +101,23 @@ Settings = props => {
                         size="medium"
                         onToggle={(isOn) => toggleLeftHandedMode(isOn)}
                     />
+                </View>
+                <View style={styles.settingRow}>
+                    <Text style={styles.setting}>Tutorial:</Text>
+                    <TouchableOpacity style={styles.tutorialButton} onPress={() => setIsTutorial1(true)}>
+                        <Text style={styles.setting}>View</Text>
+                        <Ionicons
+                            name='arrow-forward-outline'
+                            style={styles.arrowIcon}
+                        />
+                    </TouchableOpacity>
+                    
+                </View>
+                <View style={styles.aboutButtonRow}>
+                    <TouchableOpacity style={styles.aboutButton} onPress={() => console.log('about')}>
+                        <Text style={styles.aboutButtonText}>About</Text>
+                    </TouchableOpacity>
+                    
                 </View>
                 {/* <View style={styles.settingRow}>
                     <Text style={styles.setting}>Location:</Text>
@@ -133,7 +159,7 @@ Settings = props => {
                 <View style={styles.buttonsRow}>
                     <TouchableOpacity 
                         onPress={saveSettings} 
-                        style={styles.yesButton}>
+                        style={styles.saveButton}>
                         {isSaving ?
                         <ActivityIndicator
                             style={styles.wheel}
@@ -141,7 +167,7 @@ Settings = props => {
                         />
                         :
                         <Text
-                            style={styles.yesButtonText}>
+                            style={styles.saveButtonText}>
                             Save
                         </Text>
                         }
@@ -172,10 +198,12 @@ const styles = StyleSheet.create({
         backgroundColor: colors.cream, 
         borderRadius: 10, 
         paddingLeft: '5%', 
-        paddingRight: '5%'
+        paddingRight: '5%',
+        paddingTop: '16%',
+        paddingBottom: '16%'
     },
     title: {
-        marginTop: '20%',
+        // marginTop: '20%',
         fontSize: 36, 
         textAlign: 'center', 
         fontFamily: 'Rubik-Regular',
@@ -188,7 +216,18 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         //borderWidth: 2,
         paddingLeft: 0,
-        paddingBottom: 16
+        paddingBottom: 6
+    },
+    aboutButtonRow: {
+        width: '100%',
+        //height: 40,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        //borderWidth: 2,
+        // paddingLeft: 0,
+        paddingBottom: 0,
+        marginTop: 40
     },
     buttonsRow: {
         width: '100%',
@@ -197,8 +236,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         //borderWidth: 2,
-        paddingLeft: 0,
-        paddingBottom: 16
+        // paddingLeft: 0,
+        paddingBottom: 16,
+        marginTop: 0
     },
     settingDistanceRow: {
         width: '100%',
@@ -221,12 +261,45 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         fontFamily: 'Rubik-Regular'
     },
+    tutorialButton: {
+        flexDirection: 'row',
+        width: '30%',
+        height: 26,
+        borderWidth: 0,
+        borderColor: 'black',
+        borderRadius: 10,
+        backgroundColor: colors.green,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    aboutButton: {
+        flexDirection: 'row',
+        width: '60%',
+        height: 26,
+        borderWidth: 0,
+        borderColor: 'black',
+        borderRadius: 10,
+        backgroundColor: colors.green,
+        justifyContent: 'center',
+        // marginTop: 30,
+        alignItems: 'center'
+    },
+    aboutButtonText: {
+        display: 'flex',
+        fontSize: 20,
+        textAlign: 'right',
+        fontFamily: 'Rubik-Regular'
+    },
+    arrowIcon: {
+        fontSize: 20,
+        paddingLeft: 4
+    },
     outerCircle: {
         paddingRight: 0,
         margin: 0,
         //borderWidth: 2,
     }, 
-    yesButton: {
+    saveButton: {
         width: '75%',
         height: 40,
         borderWidth: 0,
@@ -237,7 +310,7 @@ const styles = StyleSheet.create({
         marginTop: 30,
         alignItems: 'center'
     },
-    yesButtonText: {
+    saveButtonText: {
         fontSize: 26,
         fontFamily: 'Rubik-Regular'
     },
@@ -250,7 +323,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.red,
         justifyContent: 'center',
         marginTop: 20,
-        marginBottom: '20%',
+        // marginBottom: '20%',
         alignItems: 'center'
     },
     cancelButtonText: {

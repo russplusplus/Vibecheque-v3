@@ -18,7 +18,7 @@ function* indicateFavorite(action) {
     }
 
     console.log('right before reduxState.userID')
-    let favRef = 'users/' + reduxState.userID + '/favorite';
+    let favRef = 'users/' + reduxState.userID + '/data/favorite';
     console.log('in indicateFavorite. favRef:', favRef)
     let favObj = {
         name: Object.keys(reduxState.userData.inbox)[0],

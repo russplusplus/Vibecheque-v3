@@ -192,7 +192,7 @@ const CameraPage = props => {
     }
 
     viewInbox = async () => {
-        console.log('in viewInbox')
+        console.log('in viewInbox. userData:', props.reduxState.userData)
         if (props.reduxState.userData.inbox) {
             props.history.push('/ViewInbox')
         } else {
@@ -251,7 +251,7 @@ const CameraPage = props => {
     }
 
     useEffect(() => {
-        console.log('props.reduxState.userData:', props.reduxState.userData)
+        // console.log('props.reduxState.userData:', props.reduxState.userData)
         //setUid()
         getUserData()
         props.dispatch({  // updates user's device registration token in database and adds it to redux
@@ -278,8 +278,16 @@ const CameraPage = props => {
     useEffect(() => {
         console.log('userData triggered')
         console.log('props.reduxState.userData.settings:', props.reduxState.userData.settings)
-        if (props.reduxState.userData.settings) {
-            setIsLeftHandedMode(props.reduxState.userData.settings.leftHandedMode)
+        
+        if (props.reduxState.userData) {
+            if (props.reduxState.userData.settings) {
+                setIsLeftHandedMode(props.reduxState.userData.settings.leftHandedMode)
+            }
+        } else {
+            console.log('no user data found. waiting 4 seconds and re-querying')
+            setTimeout(() => {
+                getUserData()
+            }, 4000)
         }
     }, [props.reduxState.userData])
 

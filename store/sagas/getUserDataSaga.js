@@ -12,24 +12,30 @@ function* getUserData() {
     const ref = `users/${uid}`
     
     try {
-        setTimeout(async () => {
-            // the auth trigger function takes a couple seconds to populate the new user data in the db, so we wait a couple seconds before querying it
-            // 4 seconds works so far, may be able to go lower
-            const snapshot = await database()
-                .ref(ref)
-                .once('value')
-            const user = snapshot.val()
-            console.log('in getUserData. snapshot.val():', user)
-            put({
-                type: 'SET_USER_DATA',
+        // the auth trigger function takes a couple seconds to populate the new user data in the db, so we wait a couple seconds before querying it
+        // 4 seconds works so far, may be able to go lower
+        // UPDATE: this is not actually a problem. Not having the user data for a new user has no 
+        // apparent consequences, since their inbox will be empty anyway
+        // setTimeout function was eliminated
+        const snapshot = yield database()
+            .ref(ref)
+            .once('value')
+        const user = snapshot.val()
+        console.log('in getUserData. snapshot.val():', user)
+        if (!user.data) {
+            console.log('user data not found')
+        } else {
+            console.log('phoneNumber found, so setting user data')
+            yield put({                     // "await put" does not work, but "yield put" does
+                type: 'SET_USER_DATA',      // so wrapping in async timeout function won't work
                 payload: user.data
             })
-            put({
+            yield put({
                 type: 'SET_NEW_SETTINGS',
                 payload: user.data.settings
-            })
-        }, 4000);
-        
+            })    
+        }
+            
     } catch(err) {
         console.log(err)
     }
