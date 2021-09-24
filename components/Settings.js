@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, Button, Platform, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Button, Platform, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
 import Modal from 'react-native-modal';
 
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -10,12 +10,16 @@ import colors from '../assets/colors';
 import { connect } from 'react-redux';
 import database from '@react-native-firebase/database';
 
-import Tutorial1 from './Tutorial';
+import Tutorial from './Tutorial';
+import About from './About';
+
+const { width, height } = Dimensions.get('window');
 
 Settings = props => {
 
     const [isSaving, setIsSaving] = useState(false)
     const [isTutorial1, setIsTutorial1] = useState(false)
+    const [isAbout, setIsAbout] = useState(false)
 
     finishTutorial = () => {
         setIsTutorial1(false)
@@ -86,7 +90,8 @@ Settings = props => {
 
     return (
         <Modal isVisible={props.visible} animationIn='slideInDown' animationOut='slideOutUp'>
-            <Tutorial1 visible={isTutorial1} finishTutorial={finishTutorial}/>
+            <Tutorial visible={isTutorial1} finishTutorial={finishTutorial}/>
+            <About visible={isAbout} setIsAbout={setIsAbout}/>
             <View style={styles.container}>
                 <Text style={styles.title}>Settings</Text>
                 <View style={styles.settingRow}>
@@ -114,7 +119,7 @@ Settings = props => {
                     
                 </View>
                 <View style={styles.aboutButtonRow}>
-                    <TouchableOpacity style={styles.aboutButton} onPress={() => console.log('about')}>
+                    <TouchableOpacity style={styles.aboutButton} onPress={() => setIsAbout(true)}>
                         <Text style={styles.aboutButtonText}>About</Text>
                     </TouchableOpacity>
                     
