@@ -472,7 +472,7 @@ PODS:
     - Firebase/Auth (= 7.11.0)
     - React-Core
     - RNFBApp
-  - RNFBCrashlytics (12.1.0):
+  - RNFBCrashlytics (11.5.0):
     - Firebase/Crashlytics (= 7.11.0)
     - React-Core
     - RNFBApp
@@ -492,6 +492,8 @@ PODS:
     - Firebase/Storage (= 7.11.0)
     - React-Core
     - RNFBApp
+  - RNFS (2.18.0):
+    - React
   - RNVectorIcons (8.1.0):
     - React-Core
   - Yoga (1.14.0)
@@ -560,6 +562,7 @@ DEPENDENCIES:
   - "RNFBFunctions (from `../node_modules/@react-native-firebase/functions`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - "RNFBStorage (from `../node_modules/@react-native-firebase/storage`)"
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -678,6 +681,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNFBStorage:
     :path: "../node_modules/@react-native-firebase/storage"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   Yoga:
@@ -750,11 +755,12 @@ SPEC CHECKSUMS:
   RNFBAdMob: bbc64554e13d019d37fbc981f5f48ba4c6ea5889
   RNFBApp: 996860ad6832996faba79ef3f6ec2d3ea5870dd9
   RNFBAuth: 3726f7f9bc9e9efb80cd1f5b2e65c4b04dc53760
-  RNFBCrashlytics: 7f7bf32a44b7e83deb4a855d3a8dac0dc3f741e8
+  RNFBCrashlytics: 8eafacfe3dc4aeb7733c3c3d65228f4e75861e72
   RNFBDatabase: 026067d3ce9d65c96146f7f32c1f044f27665f29
   RNFBFunctions: 4838dd472870e5941908eabc48d1711dacdda558
   RNFBMessaging: 8d84ceadc705ca6b6047c37376d2e2aaabcb8e3d
   RNFBStorage: 519ea44ccd27418d4bffbc9cd088a72697b5cb98
+  RNFS: 3ab21fa6c56d65566d1fb26c2228e2b6132e5e32
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   Yoga: 8c8436d4171c87504c648ae23b1d81242bdf3bbf
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
