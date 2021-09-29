@@ -3,7 +3,7 @@ import { View, Text, TextInput, ActivityIndicator, Button, ImageBackground, Touc
 import { connect } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Image, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import PhoneInput from 'react-native-phone-number-input';
+import PhoneInput from './react-native-phone-number-input';
 
 import messaging from '@react-native-firebase/messaging';
 import database from '@react-native-firebase/database';
