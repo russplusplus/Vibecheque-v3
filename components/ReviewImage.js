@@ -4,42 +4,75 @@ import Modal from 'react-native-modal';
 import colors from '../assets/colors';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
+const RNFS = require('react-native-fs');
+const moment = require('moment')
+
+const dirHome = Platform.select({
+    ios: `${RNFS.DocumentDirectoryPath}/Vibecheque`,
+    android: `${RNFS.ExternalStorageDirectoryPath}/Vibecheque`
+});
+  
 
 ReviewImage = props => {
-        return (
-            <Modal isVisible={props.visible} animationInTiming={0.1} animationOutTiming={0.1} style={styles.modal}>
-                <ImageBackground
-                    style={{ flex: 1 }}
-                    source={{ uri: props.capturedImageUri }}>
-                {/* <View style={{ flex: 1, backgroundColor: 'black'}}> */}
-                    <View style={styles.iconContainer}>
-                        <View style={styles.bottomIcons}>
-                            <TouchableOpacity onPress={props.toggleReviewMode} style={styles.cancel}>
-                                <Ionicons
-                                    name='md-close'
-                                    style={styles.cancelIcon}
-                                />
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={props.sendImage} style={styles.sendImage}>
-                                {props.isSending ? 
-                                    <ActivityIndicator
-                                        color='black'
-                                        size={40} 
-                                        style={styles.wheel}   
-                                    />
-                                :
-                                    <Ionicons
-                                        name='md-send'
-                                        style={styles.sendImageIcon}
-                                    />
-                                }
-                            </TouchableOpacity>
-                        </View>
+
+    saveImage = () => {
+        console.log('save image')
+        const newImageName = `${moment().format('DDMMYY_HHmmSSS')}.jpg`;
+        console.log('newImageName:', newImageName)
+        console.log('dirHome:', dirHome)
+        RNFS.mkdir(dirHome)
+        .then(() => {
+            console.log('mkdir complete')
+            RNFS.moveFile(props.capturedImageUri, `${dirHome}/${newImageName}`)
+            .then(() => console.log('saved!'))
+            .catch(error => console.log(error));
+        }).catch(err => console.log(err));
+    }
+
+    return (
+        <Modal isVisible={props.visible} animationInTiming={0.1} animationOutTiming={0.1} style={styles.modal}>
+            <ImageBackground
+                style={{ flex: 1 }}
+                source={{ uri: props.capturedImageUri }}>
+            {/* <View style={{ flex: 1, backgroundColor: 'black'}}> */}
+                <View style={styles.iconContainer}>
+                    <View style={styles.saveIconContainer}>
+                        <TouchableOpacity onPress={saveImage}>
+                            <MaterialIcons
+                                name='save-alt'
+                                style={styles.saveIcon}
+                            />
+                        </TouchableOpacity>
                     </View>
-                {/* </View> */}
-                </ImageBackground> 
-            </Modal>
-        )
+                    <View style={styles.bottomIcons}>
+                        <TouchableOpacity onPress={props.toggleReviewMode} style={styles.cancel}>
+                            <Ionicons
+                                name='md-close'
+                                style={styles.cancelIcon}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={props.sendImage} style={styles.sendImage}>
+                            {props.isSending ? 
+                                <ActivityIndicator
+                                    color='black'
+                                    size={40} 
+                                    style={styles.wheel}   
+                                />
+                            :
+                                <Ionicons
+                                    name='md-send'
+                                    style={styles.sendImageIcon}
+                                />
+                            }
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            {/* </View> */}
+            </ImageBackground> 
+        </Modal>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -105,6 +138,17 @@ const styles = StyleSheet.create({
     sendImageIcon: {
         color: 'black',
         fontSize: 34
+    },
+    saveIconContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginBottom: '5%',
+        marginRight: '2%'
+    },
+    saveIcon: {
+        color: 'white',
+        fontSize: 44
     }
 })
 
