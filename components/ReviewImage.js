@@ -18,6 +18,7 @@ const dirHome = Platform.select({
 ReviewImage = props => {
 
     saveImage = () => {
+        props.setIsSaving(true)
         console.log('save image')
         const newImageName = `${moment().format('DDMMYY_HHmmSSS')}.jpg`;
         console.log('newImageName:', newImageName)
@@ -26,8 +27,15 @@ ReviewImage = props => {
         .then(() => {
             console.log('mkdir complete')
             RNFS.moveFile(props.capturedImageUri, `${dirHome}/${newImageName}`)
-            .then(() => console.log('saved!'))
-            .catch(error => console.log(error));
+            .then(() => {
+                props.setIsSaving(false)
+                props.setIsSaved(true)
+                console.log('saved!')
+            })
+            .catch(error => {
+                props.setIsSaving(false)
+                console.log(error)
+            });
         }).catch(err => console.log(err));
     }
 
@@ -38,14 +46,23 @@ ReviewImage = props => {
                 source={{ uri: props.capturedImageUri }}>
             {/* <View style={{ flex: 1, backgroundColor: 'black'}}> */}
                 <View style={styles.iconContainer}>
-                    <View style={styles.saveIconContainer}>
-                        <TouchableOpacity onPress={saveImage}>
-                            <MaterialIcons
-                                name='save-alt'
-                                style={styles.saveIcon}
+                    {/* <View style={styles.saveIconContainer}> */}
+                        {/* {props.isSaving ?  */}
+                            <ActivityIndicator
+                                style={styles.saveWheel}
                             />
-                        </TouchableOpacity>
-                    </View>
+                        {/* :
+                            <TouchableOpacity onPress={saveImage}>
+                                <MaterialIcons
+                                    name='save-alt'
+                                    style={{
+                                        color: props.isSaved ? colors.green : 'white',
+                                        fontSize: 44
+                                    }}
+                                />
+                            </TouchableOpacity>
+                        } */}
+                    {/* </View> */}
                     <View style={styles.bottomIcons}>
                         <TouchableOpacity onPress={props.toggleReviewMode} style={styles.cancel}>
                             <Ionicons
@@ -130,6 +147,12 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         transform: Platform.OS === 'ios' ? [{ scale: 1.7 }] : [{ scale: 1 }],
         marginBottom: 1
+    },
+    saveWheel: {
+        alignSelf: 'center',
+        transform: Platform.OS === 'ios' ? [{ scale: 1.7 }] : [{ scale: 1 }],
+        marginBottom: 1,
+        marginRight: '2%'
     },
     cancelIcon: {
         color: 'black',

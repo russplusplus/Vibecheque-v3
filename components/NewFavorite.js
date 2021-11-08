@@ -54,7 +54,7 @@ NewFavorite = props => {
                         borderRadius: 10,
                         backgroundColor: colors.blue,
                         justifyContent: 'center',
-                        marginTop: '10%'
+                        marginTop: '15%'
                     }}>
                     <Text style={{
                         fontSize: 26,

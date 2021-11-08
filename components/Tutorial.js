@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Button, Platform, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Button, Platform, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
 import colors from '../assets/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+const { width, height } = Dimensions.get('window');
+const vMargin = 0.476*height-291.76
 
 Tutorial = (props) => {
     const [step, setStep] = useState(1)
@@ -164,8 +167,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between', 
         marginLeft:'5%', 
         marginRight:'5%', 
-        marginTop:'30%', 
-        marginBottom:'30%', 
+        marginTop: vMargin, 
+        marginBottom: vMargin, 
         backgroundColor:colors.cream, 
         borderWidth: 0, 
         borderColor:'black', 
@@ -231,7 +234,7 @@ const styles = StyleSheet.create({
         paddingLeft: 4
     },
     image: {
-        resizeMode: Platform.OS === 'ios' ? 'contain' : 'cover', 
+        resizeMode: Platform.OS === 'ios' ? 'contain' : 'contain', 
         // position: 'absolute',
         // top: '35%',
         width: '100%',

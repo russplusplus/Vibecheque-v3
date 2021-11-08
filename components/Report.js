@@ -37,7 +37,7 @@ Report = props => {
                         textAlign:'center', 
                         fontFamily: 'Rubik-Regular'
                     }}>
-                        Bad Vibes?
+                        Bad Vibe?
                     </Text>
                     <Text style={{
                         fontSize:20, 
@@ -45,7 +45,7 @@ Report = props => {
                         marginTop:'10%',
                         fontFamily: 'Rubik-Regular'
                     }}>
-                            The sender will be temporarily banned.
+                            The sender will face consequences. Please only report explicit content.
                     </Text>
                     <TouchableOpacity 
                         onPress={() => props.report()} 
@@ -58,7 +58,7 @@ Report = props => {
                             backgroundColor: colors.red,
                             justifyContent: 'center',
                             aligntItems: 'center',
-                            marginTop: '10%'
+                            marginTop: '15%'
                         }}>
                         <Text
                             style={{
@@ -66,7 +66,7 @@ Report = props => {
                                 textAlign: 'center',
                                 fontFamily: 'Rubik-Regular'
                             }}>
-                            BAD VIBES
+                            Report
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
