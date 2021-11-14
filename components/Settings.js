@@ -14,6 +14,7 @@ import Tutorial from './Tutorial';
 import About from './About';
 
 const { width, height } = Dimensions.get('window');
+const vMargin = 0.476*height-291.76
 
 Settings = props => {
 
@@ -65,7 +66,7 @@ Settings = props => {
 
         // update database
         await database()
-            .ref(`users/${props.reduxState.userID}/settings`)
+            .ref(`users/${props.reduxState.userID}/data/settings`)
             .set(props.reduxState.newSettings)
 
         // update redux userData, rather than doing another GET_USER_DATA
@@ -87,6 +88,11 @@ Settings = props => {
         })
         props.toggleSettingsMode()
     }
+
+    useEffect(() => {
+        console.log('width: ', width)
+        console.log('height:', height)
+    }, [])
 
     return (
         <Modal isVisible={props.visible} animationIn='slideInDown' animationOut='slideOutUp'>
@@ -198,8 +204,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around', 
         marginLeft: '5%', 
         marginRight: '5%', 
-        marginTop: '30%', 
-        marginBottom: '30%', 
+        marginTop: vMargin, 
+        marginBottom: vMargin, 
         backgroundColor: colors.cream, 
         borderRadius: 10, 
         paddingLeft: '5%', 

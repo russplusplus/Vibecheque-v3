@@ -101,7 +101,7 @@ function ViewInbox (props) {
         console.log('in report function')
 
         //record report && determine if sender should be banned
-        const vibeRecordRef = 'users/' + props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].from + 'data/vibeRecord'
+        const vibeRecordRef = 'users/' + props.reduxState.userData.inbox[Object.keys(props.reduxState.userData.inbox)[0]].from + '/data/vibeRecord'
         const snapshot = await database()
             .ref(vibeRecordRef)
             .once('value')

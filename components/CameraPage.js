@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, StyleSheet, Button, Platform, TouchableOpacity, ImageBackground, TouchableNativeFeedbackBase, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Button, Platform, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
 
 import { connect } from 'react-redux';
 import { RNCamera } from 'react-native-camera';
@@ -55,6 +55,8 @@ const CameraPage = props => {
     const [isAdLoaded, setIsAdLoaded] = useState(false)
     const [isLeftHandedMode, setIsLeftHandedMode] = useState(false)
     const cameraRef = useRef(null)
+    const [isSaving, setIsSaving] = useState(false)
+    const [isSaved, setIsSaved] = useState(false)
 
     logout = () => {
         console.log('in logout function')
@@ -78,6 +80,10 @@ const CameraPage = props => {
     }
 
     toggleReviewMode = () => {
+        if (isReviewMode) {
+            setIsSaving(false)
+            setIsSaved(false)
+        }
         setIsReviewMode(isReviewMode ? false : true)
     }
 
@@ -126,7 +132,7 @@ const CameraPage = props => {
     checkIfBanned = async (uid) => {
         console.log('in checkIfBanned. uid:', uid)
         return await database()
-            .ref(`/users/${uid}/unbanTime`)
+            .ref(`/users/${uid}/data/unbanTime`)
             .once('value')
             .then(snapshot => {
                 const unbanTime = snapshot.val()
@@ -217,6 +223,7 @@ const CameraPage = props => {
 
     toggleSettingsMode = async () => {
         console.log('in toggleSettingsMode. reduxState.newSettings:', props.reduxState.newSettings)
+        console.log('height:', Dimensions.get('window').height)
         setIsSettingsMode(isSettingsMode ? false : true)
     }
 
@@ -319,8 +326,22 @@ const CameraPage = props => {
     return (
         <>
             <View style={styles.container}>
-                <Logout visible={isLogoutMode} toggleLogoutMode={toggleLogoutMode} logout={logout}/>
-                <ReviewImage visible={isReviewMode} toggleReviewMode={toggleReviewMode} sendImage={handlePressSend} capturedImageUri={capturedImageUri} isSending={isSending}/>
+                <Logout 
+                    visible={isLogoutMode} 
+                    toggleLogoutMode={toggleLogoutMode} 
+                    logout={logout}
+                />
+                <ReviewImage 
+                    visible={isReviewMode} 
+                    toggleReviewMode={toggleReviewMode} 
+                    sendImage={handlePressSend} 
+                    capturedImageUri={capturedImageUri} 
+                    isSending={isSending} 
+                    isSaving={isSaving} 
+                    setIsSaving={setIsSaving}
+                    isSaved={isSaved}
+                    setIsSaved={setIsSaved}
+                />
                 <NoFavorite visible={isNoFavoriteMode} toggleNoFavoriteMode={toggleNoFavoriteMode}/>
                 <Settings visible={isSettingsMode} toggleSettingsMode={toggleSettingsMode}/>
                 <RNCamera

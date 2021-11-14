@@ -31,7 +31,7 @@ const Login = props => {
     checkIfBanned = async (uid) => {
         console.log('in checkIfBanned. uid:', uid)
         return await database()
-            .ref(`/users/${uid}/unbanTime`)
+            .ref(`/users/${uid}/data/unbanTime`)
             .once('value')
             .then(snapshot => {
                 const unbanTime = snapshot.val()

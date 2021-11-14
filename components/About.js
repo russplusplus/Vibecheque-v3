@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, Button, Platform, TouchableOpacity, ActivityIndicator, Image, Linking } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Button, Platform, TouchableOpacity, Dimensions, Image, Linking } from 'react-native';
 import Modal from 'react-native-modal';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
@@ -7,6 +7,9 @@ import colors from '../assets/colors';
 import { connect } from 'react-redux';
 
 AntDesign.loadFont()
+
+const { width, height } = Dimensions.get('window');
+const vMargin = 0.476*height-291.76
 
 About = props => {
 
@@ -16,7 +19,7 @@ About = props => {
                 <Image source={require('../assets/Vibecheque_logo2.png')} style={styles.logo}/>
                 <Text style={styles.text}>
                     Vibecheque spreads good vibes to those who need them most. 
-                    All ad revenue is donated to the Metro Denver Housing Initiative.
+                    All ad revenue is donated to Denver mutual aid funds.
                 </Text>
                 <Text style={styles.text2}>
                     Follow us on Instagram for updates
@@ -54,8 +57,8 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end', 
         marginLeft: '5%', 
         marginRight: '5%', 
-        marginTop: '30%', 
-        marginBottom: '30%', 
+        marginTop: vMargin, 
+        marginBottom: vMargin, 
         backgroundColor: colors.cream, 
         borderRadius: 10, 
         // paddingLeft: '5%', 
@@ -111,7 +114,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: colors.blue,
         justifyContent: 'center',
-        marginTop: 20,
+        marginTop: 25,
         // marginBottom: '20%',
         alignItems: 'center'
     },
@@ -122,7 +125,7 @@ const styles = StyleSheet.create({
     logo: {
         // resizeMode: Platform.OS === 'ios' ? 'contain' : 'cover', 
         position: 'absolute',
-        top: '15%',
+        top: '10%',
         width: '100%',
         height: '23%', // 17% cuts off the q on android and 19% makes the logo wider on android
         marginBottom: '5%',
