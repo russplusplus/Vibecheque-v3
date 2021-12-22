@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
         width: '75%',
         height: 50,
         fontFamily: 'Rubik-Regular',
-        textAlign: 'center'
+        textAlign: 'center',
     },
     phoneInput: {
         width: '75%',

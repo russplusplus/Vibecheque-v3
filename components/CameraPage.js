@@ -110,13 +110,14 @@ const CameraPage = props => {
     }
 
     handlePressSend = () => {
-        setIsSending(true)
         console.log('in handlePressSend. didTheyFavorite:', props.reduxState.didTheyFavorite)
         console.log('isSending:', isSending)
         console.log('isAdLoaded:', isAdLoaded)
 
         // if (props.reduxState.userID && isAdLoaded) {
         if (props.reduxState.userID) {
+            console.log('userID found; sending')
+            setIsSending(true)
             sendImage()
         } else {
             if (!props.reduxState.userID) {
@@ -127,6 +128,7 @@ const CameraPage = props => {
                 console.log('???????')
             }
         }
+        // setIsSending(false)
     }
 
     checkIfBanned = async (uid) => {
@@ -184,17 +186,14 @@ const CameraPage = props => {
 
 
             //show ad here
-            //rewarded.show()
-
-
-
-            toggleReviewMode()
-            setIsSending(false)
+            if (isAdLoaded) {
+                rewarded.show()
+                toggleReviewMode()
+                // setIsSending(false)
+            } else {
+                //do nothing. listener will show add once loaded
+            }   
         }
-
-        
-
-
     }
 
     viewInbox = async () => {
@@ -269,13 +268,18 @@ const CameraPage = props => {
     }, [])
 
     useEffect(() => {
+        if (isReviewMode === false) {
+            setIsSending(false)
+        }
+    }, [isReviewMode])
+
+    useEffect(() => {
         console.log('isSending triggered.', isSending)
     }, [isSending])
 
     useEffect(() => {
-        if (isSending) {
-            rewarded.show()
-        }
+        // once add is loaded, checkto see if the use has pressed send. If so, show the add
+        
     }, [isAdLoaded])
 
     // useEffect(() => {
@@ -305,7 +309,10 @@ const CameraPage = props => {
                 setIsAdLoaded(true);
                 console.log('isSending:', isSending)
                 if (isSending) {
-                    sendImage()
+                    rewarded.show()
+                    toggleReviewMode()
+                } else {
+                    //do nothing. ad will show once image is sent
                 }
             }
         

@@ -17,27 +17,27 @@ const dirHome = Platform.select({
 
 ReviewImage = props => {
 
-    saveImage = () => {
-        props.setIsSaving(true)
-        console.log('save image')
-        const newImageName = `${moment().format('DDMMYY_HHmmSSS')}.jpg`;
-        console.log('newImageName:', newImageName)
-        console.log('dirHome:', dirHome)
-        RNFS.mkdir(dirHome)
-        .then(() => {
-            console.log('mkdir complete')
-            RNFS.moveFile(props.capturedImageUri, `${dirHome}/${newImageName}`)
-            .then(() => {
-                props.setIsSaving(false)
-                props.setIsSaved(true)
-                console.log('saved!')
-            })
-            .catch(error => {
-                props.setIsSaving(false)
-                console.log(error)
-            });
-        }).catch(err => console.log(err));
-    }
+    // saveImage = () => {
+    //     props.setIsSaving(true)
+    //     console.log('save image')
+    //     const newImageName = `${moment().format('DDMMYY_HHmmSSS')}.jpg`;
+    //     console.log('newImageName:', newImageName)
+    //     console.log('dirHome:', dirHome)
+    //     RNFS.mkdir(dirHome)
+    //     .then(() => {
+    //         console.log('mkdir complete')
+    //         RNFS.moveFile(props.capturedImageUri, `${dirHome}/${newImageName}`)
+    //         .then(() => {
+    //             props.setIsSaving(false)
+    //             props.setIsSaved(true)
+    //             console.log('saved!')
+    //         })
+    //         .catch(error => {
+    //             props.setIsSaving(false)
+    //             console.log(error)
+    //         });
+    //     }).catch(err => console.log(err));
+    // }
 
     return (
         <Modal isVisible={props.visible} animationInTiming={0.1} animationOutTiming={0.1} style={styles.modal}>
@@ -46,12 +46,12 @@ ReviewImage = props => {
                 source={{ uri: props.capturedImageUri }}>
             {/* <View style={{ flex: 1, backgroundColor: 'black'}}> */}
                 <View style={styles.iconContainer}>
-                    {/* <View style={styles.saveIconContainer}> */}
-                        {/* {props.isSaving ?  */}
+                    {/* <View style={styles.saveIconContainer}>
+                        {props.isSaving ? 
                             <ActivityIndicator
                                 style={styles.saveWheel}
                             />
-                        {/* :
+                        :
                             <TouchableOpacity onPress={saveImage}>
                                 <MaterialIcons
                                     name='save-alt'
@@ -61,8 +61,8 @@ ReviewImage = props => {
                                     }}
                                 />
                             </TouchableOpacity>
-                        } */}
-                    {/* </View> */}
+                        }
+                    </View> */}
                     <View style={styles.bottomIcons}>
                         <TouchableOpacity onPress={props.toggleReviewMode} style={styles.cancel}>
                             <Ionicons
